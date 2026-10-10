@@ -1,10 +1,10 @@
 # Gerenciador de Tarefas Acadêmicas
 
-Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizando **React + TypeScript + Vite** e uma API local com **json-server**.
+Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizando **React + TypeScript + Vite** e **json-server**.
 
 ## Equipe
 
-**Nome da equipe:** DEPLOY
+**DEPLOY**
 
 ### Integrantes
 
@@ -20,27 +20,60 @@ Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizan
 **Professora:** Marianne Lacerda Dutra Theodoro  
 GitHub: `@mariannedutra`
 
-## Tecnologias utilizadas
+## Tecnologias
 
 - React
 - TypeScript
 - Vite
 - json-server
-- Git
-- GitHub
-- GitHub Projects
 
-## Pré-requisitos
+## Como executar
 
-Antes de executar o projeto, é necessário possuir:
-
-- Node.js
-- npm
-- Git
-
-## Como executar o projeto
-
-### 1. Clonar o repositório
+Clone o repositório:
 
 ```bash
 git clone https://github.com/reginaldoandrade-inf/Desenvolvimento-FrontEnd-5N-Deploy.git
+```
+
+Entre na pasta:
+
+```bash
+cd Desenvolvimento-FrontEnd-5N-Deploy
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Execute o frontend:
+
+```bash
+npm run dev
+```
+
+Em outro terminal, execute a API:
+
+```bash
+npx json-server db.json
+```
+
+A aplicação ficará disponível normalmente em:
+
+```text
+http://localhost:5173
+```
+
+E a API em:
+
+```text
+http://localhost:3000
+```
+
+Endpoints principais:
+
+```text
+http://localhost:3000/tarefas
+http://localhost:3000/projetos
+```
