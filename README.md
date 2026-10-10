@@ -1,32 +1,46 @@
-# React + TypeScript + Vite
+# Gerenciador de Tarefas Acadêmicas
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizando **React + TypeScript + Vite** e uma API local com **json-server**.
 
-Currently, two official plugins are available:
+## Equipe
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Nome da equipe:** DEPLOY
 
-## React Compiler
+### Integrantes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Julio Alexandre Costa Neto
+- Lucas Wagner Araújo
+- Luis Vinicius da Silva Costa
+- Reginaldo Santos Andrade
 
-## Expanding the Oxlint configuration
+## Disciplina
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+**Desenvolvimento Frontend — 2026.2**
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+**Professora:** Marianne Lacerda Dutra Theodoro  
+GitHub: `@mariannedutra`
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Tecnologias utilizadas
+
+- React
+- TypeScript
+- Vite
+- json-server
+- Git
+- GitHub
+- GitHub Projects
+
+## Pré-requisitos
+
+Antes de executar o projeto, é necessário possuir:
+
+- Node.js
+- npm
+- Git
+
+## Como executar o projeto
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/reginaldoandrade-inf/Desenvolvimento-FrontEnd-5N-Deploy.git
