@@ -12,12 +12,20 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+          {/* Abre a lista de tarefas ao carregar a página inicial / */}
           <Route index element={<ListaTarefas />} />
+          
+          {/* Rotas de Tarefas */}
+          <Route path="tarefas" element={<ListaTarefas />} />
           <Route path="tarefas/:id" element={<DetalheTarefa />} />
+          
+          {/* Rotas de Projetos */}
           <Route path="projetos" element={<ListaProjetos />} />
           <Route path="projetos/novo" element={<FormularioProjeto />} />
           <Route path="projetos/:id/editar" element={<FormularioProjeto />} />
           <Route path="projetos/:id" element={<DetalheProjeto />} />
+          
+          {/* Rota para páginas não encontradas (404) */}
           <Route path="*" element={<NaoEncontrada />} />
         </Route>
       </Routes>
