@@ -49,6 +49,7 @@ export function ListaProjetos() {
   return (
     <section>
       <h1>Meus projetos</h1>
+      <p><Link to="/projetos/novo">+ Novo projeto</Link></p>
 
       {projetos.length === 0 ? (
         <p>Nenhum projeto cadastrado.</p>

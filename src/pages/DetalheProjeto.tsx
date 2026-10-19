@@ -28,6 +28,7 @@ export function DetalheProjeto() {
       <h1>Projeto: {dados.nome}</h1>
       <p>{dados.descricao}</p>
       <p><strong>Disciplina:</strong> {dados.disciplina}</p>
+      <p><Link to={`/projetos/${dados.id}/editar`}>Editar projeto</Link></p>
 
       <h2>Tarefas deste Projeto:</h2>
       {dados.tarefas.length === 0 ? (
