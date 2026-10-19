@@ -25,6 +25,7 @@ export function ListaTarefas() {
   return (
     <div>
       <h1>Todas as Tarefas</h1>
+      <Link to="/tarefas/nova">+ Nova tarefa</Link>
 
       {tarefas.length === 0 ? (
         <p>Nenhuma tarefa encontrada.</p>
