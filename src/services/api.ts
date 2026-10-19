@@ -1,4 +1,4 @@
-import type { Projeto, Tarefa } from '../tipos'
+import type { NovaTarefa, Projeto, Tarefa } from '../tipos'
 
 const API_URL = 'http://localhost:3000'
 
@@ -6,8 +6,15 @@ export type ProjetoComTarefas = Projeto & {
   tarefas: Tarefa[]
 }
 
-async function requisitar<T>(caminho: string): Promise<T> {
-  const resposta = await fetch(`${API_URL}${caminho}`)
+export type NovoProjeto = Omit<Projeto, 'id'>
+export type AtualizacaoTarefa = Partial<NovaTarefa>
+export type AtualizacaoProjeto = Partial<NovoProjeto>
+
+async function requisitar<T>(
+  caminho: string,
+  opcoes?: RequestInit,
+): Promise<T> {
+  const resposta = await fetch(`${API_URL}${caminho}`, opcoes)
 
   if (!resposta.ok) {
     throw new Error(`Erro ao acessar a API (${resposta.status})`)
@@ -16,6 +23,19 @@ async function requisitar<T>(caminho: string): Promise<T> {
   return resposta.json() as Promise<T>
 }
 
+function enviarDados<TResposta, TDados>(
+  caminho: string,
+  metodo: 'POST' | 'PATCH',
+  dados: TDados,
+): Promise<TResposta> {
+  return requisitar<TResposta>(caminho, {
+    method: metodo,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dados),
+  })
+}
+
+// Leitura (Issue #7): manter as funções existentes.
 export function listarTarefas(): Promise<Tarefa[]> {
   return requisitar<Tarefa[]>('/tarefas')
 }
@@ -37,5 +57,36 @@ export function buscarProjetoComTarefas(
 ): Promise<ProjetoComTarefas> {
   return requisitar<ProjetoComTarefas>(
     `/projetos/${encodeURIComponent(id)}?_embed=tarefas`,
+  )
+}
+
+// Escrita (Issue #16): novas funções.
+export function criarTarefa(dados: NovaTarefa): Promise<Tarefa> {
+  return enviarDados<Tarefa, NovaTarefa>('/tarefas', 'POST', dados)
+}
+
+export function atualizarTarefa(
+  id: string,
+  dados: AtualizacaoTarefa,
+): Promise<Tarefa> {
+  return enviarDados<Tarefa, AtualizacaoTarefa>(
+    `/tarefas/${encodeURIComponent(id)}`,
+    'PATCH',
+    dados,
+  )
+}
+
+export function criarProjeto(dados: NovoProjeto): Promise<Projeto> {
+  return enviarDados<Projeto, NovoProjeto>('/projetos', 'POST', dados)
+}
+
+export function atualizarProjeto(
+  id: string,
+  dados: AtualizacaoProjeto,
+): Promise<Projeto> {
+  return enviarDados<Projeto, AtualizacaoProjeto>(
+    `/projetos/${encodeURIComponent(id)}`,
+    'PATCH',
+    dados,
   )
 }
