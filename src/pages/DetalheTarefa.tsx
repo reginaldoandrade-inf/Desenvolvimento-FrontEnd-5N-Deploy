@@ -56,6 +56,7 @@ export function DetalheTarefa() {
       <p><strong>Prioridade:</strong> {tarefa.prioridade}</p>
       <p><strong>Responsável:</strong> {tarefa.responsavel}</p>
       <p><strong>Prazo:</strong> {tarefa.prazo}</p>
+      <Link to={`/tarefas/${tarefa.id}/editar`}>Editar tarefa</Link>
       <br />
       <Link to="/">← Voltar para a Lista de Tarefas</Link>
     </div>

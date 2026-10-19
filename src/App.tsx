@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ListaTarefas } from './pages/ListaTarefas';
 import { DetalheTarefa } from './pages/DetalheTarefa';
+import { NovaTarefa } from './pages/NovaTarefa';
+import { EditarTarefa } from './pages/EditarTarefa';
 import { ListaProjetos } from './pages/ListaProjetos';
 import { DetalheProjeto } from './pages/DetalheProjeto';
 import { FormularioProjeto } from './pages/FormularioProjeto';
@@ -17,6 +19,8 @@ export function App() {
           
           {/* Rotas de Tarefas */}
           <Route path="tarefas" element={<ListaTarefas />} />
+          <Route path="tarefas/nova" element={<NovaTarefa />} />
+          <Route path="tarefas/:id/editar" element={<EditarTarefa />} />
           <Route path="tarefas/:id" element={<DetalheTarefa />} />
           
           {/* Rotas de Projetos */}
