@@ -1,51 +1,83 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { buscarTarefa } from '../services/api';
-import type { Tarefa } from '../tipos';
+
+import { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { buscarTarefa } from '../services/api'
+import type { Tarefa } from '../tipos'
+
+type ResultadoBusca = {
+  id: string
+  tarefa: Tarefa | null
+  erro: string | null
+}
 
 export function DetalheTarefa() {
-  const { id } = useParams<{ id: string }>();
-  const [tarefa, setTarefa] = useState<Tarefa | null>(null);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>()
+
+  const [resultado, setResultado] = useState<ResultadoBusca | null>(null)
 
   useEffect(() => {
-    if (!id) {
-      setErro('ID da tarefa não foi informado.');
-      setCarregando(false);
-      return;
-    }
+    if (!id) return
 
-    setCarregando(true);
-    setErro(null);
+    let ativo = true
 
     buscarTarefa(id)
-      .then((dados) => setTarefa(dados))
-      .catch((err) => {
-        console.error(err);
-        setErro('Erro ao carregar os detalhes da tarefa.');
+      .then((dados) => {
+        if (ativo) {
+          setResultado({
+            id,
+            tarefa: dados,
+            erro: null,
+          })
+        }
       })
-      .finally(() => setCarregando(false));
-  }, [id]);
+      .catch((err) => {
+        console.error(err)
 
-  if (carregando) return <p>Carregando detalhes...</p>;
+        if (ativo) {
+          setResultado({
+            id,
+            tarefa: null,
+            erro: 'Erro ao carregar os detalhes da tarefa.',
+          })
+        }
+      })
 
-  if (erro) {
+    return () => {
+      ativo = false
+    }
+  }, [id])
+
+  if (!id) {
     return (
       <div>
-        <p style={{ color: 'red' }}>{erro}</p>
-        <Link to="/">← Voltar para a Lista de Tarefas</Link>
+        <p role="alert">ID da tarefa não foi informado.</p>
+        <Link to="/tarefas">Voltar para a lista de tarefas</Link>
       </div>
-    );
+    )
   }
+
+  if (!resultado || resultado.id !== id) {
+    return <p>Carregando detalhes...</p>
+  }
+
+  if (resultado.erro) {
+    return (
+      <div>
+        <p role="alert">{resultado.erro}</p>
+        <Link to="/tarefas">Voltar para a lista de tarefas</Link>
+      </div>
+    )
+  }
+
+  const tarefa = resultado.tarefa
 
   if (!tarefa) {
     return (
       <div>
         <p>Tarefa não encontrada!</p>
-        <Link to="/">← Voltar para a Lista de Tarefas</Link>
+        <Link to="/tarefas">Voltar para a lista de tarefas</Link>
       </div>
-    );
+    )
   }
 
   return (
@@ -56,9 +88,16 @@ export function DetalheTarefa() {
       <p><strong>Prioridade:</strong> {tarefa.prioridade}</p>
       <p><strong>Responsável:</strong> {tarefa.responsavel}</p>
       <p><strong>Prazo:</strong> {tarefa.prazo}</p>
-      <Link to={`/tarefas/${tarefa.id}/editar`}>Editar tarefa</Link>
+
+      <Link to={`/tarefas/${tarefa.id}/editar`}>
+        Editar tarefa
+      </Link>
+
       <br />
-      <Link to="/">← Voltar para a Lista de Tarefas</Link>
+
+      <Link to="/tarefas">
+        ← Voltar para a Lista de Tarefas
+      </Link>
     </div>
-  );
+  )
 }

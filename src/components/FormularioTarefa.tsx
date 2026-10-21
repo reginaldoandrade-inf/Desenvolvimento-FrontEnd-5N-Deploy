@@ -33,14 +33,29 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
   const [erros, setErros] = useState<ErrosForm>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    listarProjetos().then((data) => {
-      setProjetos(data);
-      if (!projetoId && data.length > 0) {
-        setProjetoId(data[0].id);
+useEffect(() => {
+  let ativo = true
+
+  listarProjetos()
+    .then((data) => {
+      if (!ativo) return
+
+      setProjetos(data)
+
+      if (data.length > 0) {
+        setProjetoId((anterior) => anterior || data[0].id)
       }
-    });
-  }, []);
+    })
+    .catch((err) => {
+      if (ativo) {
+        console.error('Erro ao carregar projetos:', err)
+      }
+    })
+
+  return () => {
+    ativo = false
+  }
+}, [])
 
   const validarCampos = (): boolean => {
     const novosErros: ErrosForm = {};
