@@ -4,7 +4,6 @@ import { FormularioTarefa } from '../components/FormularioTarefa'
 import { atualizarTarefa, buscarTarefa } from '../services/api'
 import type { NovaTarefa } from '../tipos'
 
-// Issue #19: rota /tarefas/:id/editar
 export function EditarTarefa() {
   const { id } = useParams<{ id: string }>()
   const navegar = useNavigate()
