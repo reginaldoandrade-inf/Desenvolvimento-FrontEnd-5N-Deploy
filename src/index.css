@@ -1,111 +1,252 @@
+/* DEPLOY — estilo base para os Marcos 3 e 4.
+   Alteração visual: não modifica lógica, rotas ou chamadas à API. */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #243247;
+  background: #f5f7fb;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
+  min-width: 320px;
+  line-height: 1.55;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+#root {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  border: 0;
+  text-align: left;
+  display: block;
+}
+
+/* Cabeçalho — sobrescreve apenas os estilos inline antigos do Layout */
+#root > div > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px max(24px, calc((100vw - 1120px) / 2));
+  margin-bottom: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #e1e7ef;
+  box-shadow: 0 2px 8px rgba(30, 50, 80, 0.035);
+}
+
+#root > div > header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 750;
+  color: #17243a;
+}
+
+#root > div > header nav { display: flex; flex-wrap: wrap; gap: 10px; }
+
+#root > div > header nav a {
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+#root > div > header nav a:hover {
+  background: #eef3ff;
+  color: #2454a6;
+}
+
+/* Conteúdo */
+#root > div > main {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 36px 24px 72px;
+}
+
+h1, h2, h3 {
+  color: #1b2a41;
+  line-height: 1.25;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+
+p { margin: 0 0 10px; }
+
+a { color: #245cbe; }
+a:hover { color: #16458f; }
+
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #8eb8fb;
+  outline-offset: 2px;
 }
-p {
+
+/* Cartões de tarefas: mantém o componente atual intacto */
+article.cartao-tarefa {
+  background: #fff;
+  border: 1px solid #dfe6ef !important;
+  border-radius: 12px;
+  padding: 22px 26px !important;
+  margin: 20px 0 10px !important;
+  box-shadow: 0 5px 18px rgba(33, 54, 88, 0.055);
+  transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+article.cartao-tarefa:hover {
+  box-shadow: 0 9px 24px rgba(33, 54, 88, 0.09);
+  transform: translateY(-1px);
+}
+
+article.cartao-tarefa h3 { margin: 0 0 14px; }
+article.cartao-tarefa p { margin: 5px 0; color: #45566c; }
+article.cartao-tarefa strong { color: #243247; }
+
+/* Lista de projetos */
+main ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+main li > article {
+  background: #fff;
+  padding: 22px 26px;
+  margin-bottom: 16px;
+  border: 1px solid #dfe6ef;
+  border-radius: 12px;
+  box-shadow: 0 5px 18px rgba(33, 54, 88, 0.055);
+}
+
+main li > article h2 { margin: 0 0 12px; }
+
+/* Formulários de cadastro/edição */
+main form {
+  display: grid;
+  gap: 18px;
+  max-width: 740px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #dfe6ef;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(33, 54, 88, 0.055);
+}
+
+main form > div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+main label {
+  color: #334155;
+  font-weight: 650;
+}
+
+main input, main select, main textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  font: inherit;
+  color: #1b2a41;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+main textarea { min-height: 100px; resize: vertical; }
+main input:hover, main select:hover, main textarea:hover { border-color: #94a3b8; }
+
+main button {
+  width: fit-content;
+  padding: 11px 20px;
+  font: inherit;
+  font-weight: 650;
+  color: white;
+  background: #245cbe;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+main button:hover:not(:disabled) { background: #174995; }
+main button:disabled { opacity: .6; cursor: not-allowed; }
+
+.mensagem-erro, [role="alert"] {
+  color: #b42318;
+  font-size: .93rem;
+}
+
+[aria-invalid="true"] { border-color: #d64d4d !important; }
+
+@media (max-width: 650px) {
+  #root > div > header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+  }
+
+  #root > div > main { padding: 24px 16px 48px; }
+
+  main form, main li > article { padding: 18px; }
+  article.cartao-tarefa { padding: 18px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article.cartao-tarefa { transition: none; transform: none !important; }
+}
+
+/* Identidade visual DEPLOY */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.marca-simbolo {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #245cbe;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.08em;
+}
+
+#root > div > header .marca h2 {
   margin: 0;
+  font-size: 21px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #162742;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.marca-texto span {
+  display: block;
+  margin-top: 4px;
+  color: #718096;
+  font-size: 12px;
+  line-height: 1.3;
 }

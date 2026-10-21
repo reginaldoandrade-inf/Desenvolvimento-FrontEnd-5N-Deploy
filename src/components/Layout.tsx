@@ -1,21 +1,26 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom'
 
 export function Layout() {
   return (
     <div>
-      {/* Cabeçalho comum que aparece em todas as páginas */}
-      <header style={{ padding: '1rem', backgroundColor: '#f4f4f4', marginBottom: '1rem' }}>
-        <h2>Gerenciador de Tarefas</h2>
-        <nav style={{ display: 'flex', gap: '1rem' }}>
+      <header>
+        <div className="marca">
+          <div className="marca-simbolo" aria-hidden="true">D</div>
+          <div className="marca-texto">
+            <h2>DEPLOY</h2>
+            <span>Gerenciador de Tarefas</span>
+          </div>
+        </div>
+
+        <nav aria-label="Navegação principal">
           <Link to="/tarefas">Tarefas</Link>
           <Link to="/projetos">Projetos</Link>
         </nav>
       </header>
 
-      {/* O Outlet é onde a página atual (Lista, Detalhe, etc.) vai ser desenhada */}
-      <main style={{ padding: '0 1rem' }}>
+      <main>
         <Outlet />
       </main>
     </div>
-  );
+  )
 }
