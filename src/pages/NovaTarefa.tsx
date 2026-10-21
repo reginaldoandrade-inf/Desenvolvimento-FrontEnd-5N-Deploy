@@ -13,8 +13,6 @@ const tarefaVazia: DadosTarefa = {
   prazo: '',
 }
 
-// Issue #18: rota /tarefas/nova
-// Aceita projeto pré-selecionado pela URL: /tarefas/nova?projetoId=1
 export function NovaTarefa() {
   const navegar = useNavigate()
   const [parametros] = useSearchParams()

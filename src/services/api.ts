@@ -35,7 +35,6 @@ function enviarDados<TResposta, TDados>(
   })
 }
 
-// Leitura (Issue #7): manter as funções existentes.
 export function listarTarefas(): Promise<Tarefa[]> {
   return requisitar<Tarefa[]>('/tarefas')
 }
@@ -60,7 +59,6 @@ export function buscarProjetoComTarefas(
   )
 }
 
-// Escrita (Issue #16): novas funções.
 export function criarTarefa(dados: NovaTarefa): Promise<Tarefa> {
   return enviarDados<Tarefa, NovaTarefa>('/tarefas', 'POST', dados)
 }

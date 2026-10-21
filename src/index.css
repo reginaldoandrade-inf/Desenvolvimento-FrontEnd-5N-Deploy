@@ -29,7 +29,6 @@ body {
   display: block;
 }
 
-/* Cabeçalho — sobrescreve apenas os estilos inline antigos do Layout */
 #root > div > header {
   display: flex;
   justify-content: space-between;
@@ -64,7 +63,6 @@ body {
   color: #2454a6;
 }
 
-/* Conteúdo */
 #root > div > main {
   width: 100%;
   max-width: 1120px;
@@ -98,7 +96,6 @@ select:focus-visible, textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* Cartões de tarefas: mantém o componente atual intacto */
 article.cartao-tarefa {
   background: #fff;
   border: 1px solid #dfe6ef !important;
@@ -118,7 +115,6 @@ article.cartao-tarefa h3 { margin: 0 0 14px; }
 article.cartao-tarefa p { margin: 5px 0; color: #45566c; }
 article.cartao-tarefa strong { color: #243247; }
 
-/* Lista de projetos */
 main ul {
   padding-left: 0;
   list-style: none;
@@ -135,7 +131,6 @@ main li > article {
 
 main li > article h2 { margin: 0 0 12px; }
 
-/* Formulários de cadastro/edição */
 main form {
   display: grid;
   gap: 18px;
@@ -212,7 +207,6 @@ main button:disabled { opacity: .6; cursor: not-allowed; }
   article.cartao-tarefa { transition: none; transform: none !important; }
 }
 
-/* Identidade visual DEPLOY */
 .marca {
   display: flex;
   align-items: center;
