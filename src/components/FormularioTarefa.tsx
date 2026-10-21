@@ -14,6 +14,9 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
   const [projetos, setProjetos] = useState<Projeto[]>([])
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
+  const [errosCampos, setErrosCampos] = useState<
+    Partial<Record<keyof NovaTarefa, string>>
+  >({})
 
   useEffect(() => {
     listarProjetos()
@@ -21,9 +24,48 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
       .catch(() => setErro('Não foi possível carregar os projetos.'))
   }, [])
 
-  function alterarCampo<K extends keyof NovaTarefa>(campo: K, valor: NovaTarefa[K]) {
-    setCampos((anterior) => ({ ...anterior, [campo]: valor }))
+  function alterarCampo<K extends keyof NovaTarefa>(
+  campo: K,
+  valor: NovaTarefa[K]
+) {
+  // Atualiza o valor digitado pelo usuário
+  setCampos((anterior) => ({
+    ...anterior,
+    [campo]: valor,
+  }))
+
+  // Remove a mensagem de erro quando o campo é preenchido
+  if (typeof valor === 'string' && valor.trim() !== '') {
+    setErrosCampos((anterior) => ({
+      ...anterior,
+      [campo]: undefined,
+    }))
   }
+}
+
+  function validarCampos(dados: NovaTarefa): boolean {
+  const novosErros: Partial<Record<keyof NovaTarefa, string>> = {}
+
+  if (!dados.titulo.trim()) {
+    novosErros.titulo = 'O título é obrigatório.'
+  }
+
+  if (!dados.projetoId) {
+    novosErros.projetoId = 'Selecione um projeto.'
+  }
+
+  if (!dados.responsavel.trim()) {
+    novosErros.responsavel = 'Informe o responsável.'
+  }
+
+  if (!dados.prazo) {
+    novosErros.prazo = 'Informe o prazo.'
+  }
+
+  setErrosCampos(novosErros)
+
+  return Object.keys(novosErros).length === 0
+}
 
   async function enviar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault()
@@ -36,8 +78,7 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
       responsavel: campos.responsavel.trim(),
     }
 
-    if (!dados.titulo || !dados.projetoId || !dados.responsavel || !dados.prazo) {
-      setErro('Preencha todos os campos obrigatórios.')
+    if (!validarCampos(dados)) {
       return
     }
 
@@ -59,8 +100,15 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
           id="titulo-tarefa"
           value={campos.titulo}
           onChange={(e) => alterarCampo('titulo', e.target.value)}
-          required
+          aria-invalid={!!errosCampos.titulo}
+          aria-describedby={errosCampos.titulo ? 'erro-titulo' : undefined}
         />
+
+        {errosCampos.titulo && (
+          <p id="erro-titulo" role="alert" style={{ color: 'red' }}>
+            {errosCampos.titulo}
+          </p>
+        )}
       </div>
 
       <div>
@@ -78,7 +126,8 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
           id="projeto-tarefa"
           value={campos.projetoId}
           onChange={(e) => alterarCampo('projetoId', e.target.value)}
-          required
+          aria-invalid={!!errosCampos.projetoId}
+          aria-describedby={errosCampos.projetoId ? 'erro-projeto' : undefined}
         >
           <option value="">Selecione um projeto</option>
           {projetos.map((projeto) => (
@@ -87,6 +136,13 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
             </option>
           ))}
         </select>
+
+        {errosCampos.projetoId && (
+          <p id="erro-projeto" role="alert" style={{ color: 'red' }}>
+            {errosCampos.projetoId}
+          </p>
+        )}    
+
       </div>
 
       <div>
@@ -122,8 +178,17 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
           id="responsavel-tarefa"
           value={campos.responsavel}
           onChange={(e) => alterarCampo('responsavel', e.target.value)}
-          required
+          aria-invalid={!!errosCampos.responsavel}
+          aria-describedby={
+            errosCampos.responsavel ? 'erro-responsavel' : undefined
+          }
         />
+
+        {errosCampos.responsavel && (
+          <p id="erro-responsavel" role="alert" style={{ color: 'red' }}>
+            {errosCampos.responsavel}
+          </p>
+        )}    
       </div>
 
       <div>
@@ -133,8 +198,15 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
           type="date"
           value={campos.prazo}
           onChange={(e) => alterarCampo('prazo', e.target.value)}
-          required
+          aria-invalid={!!errosCampos.prazo}
+          aria-describedby={errosCampos.prazo ? 'erro-prazo' : undefined}
         />
+
+        {errosCampos.prazo && (
+          <p id="erro-prazo" role="alert" style={{ color: 'red' }}>
+            {errosCampos.prazo}
+          </p>
+        )}
       </div>
 
       {erro && <p role="alert">{erro}</p>}
