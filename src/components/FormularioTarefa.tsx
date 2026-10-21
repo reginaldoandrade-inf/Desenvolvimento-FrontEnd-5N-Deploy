@@ -1,170 +1,139 @@
-import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
-import { listarProjetos } from '../services/api'
-import type { NovaTarefa, Prioridade, Projeto, Status } from '../tipos'
+import React, { useState, useEffect } from 'react';
+import type { NovaTarefa, Projeto, Status, Prioridade } from '../tipos';
+import { listarProjetos } from '../services/api';
 
-type Props = {
-  valoresIniciais: NovaTarefa
-  textoBotao: string
-  onSalvar: (dados: NovaTarefa) => Promise<void>
+interface ErrosForm {
+  titulo?: string;
+  responsavel?: string;
+  prazo?: string;
 }
 
-export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Props) {
-  const [campos, setCampos] = useState<NovaTarefa>(valoresIniciais)
-  const [projetos, setProjetos] = useState<Projeto[]>([])
-  const [salvando, setSalvando] = useState(false)
-  const [erro, setErro] = useState<string | null>(null)
-  const [errosCampos, setErrosCampos] = useState<
-    Partial<Record<keyof NovaTarefa, string>>
-  >({})
+interface FormularioTarefaProps {
+  dadosIniciais?: Partial<NovaTarefa>;
+  projetoIdPreSelecionado?: string;
+  onSubmit: (dados: NovaTarefa) => Promise<void>;
+  textoBotao?: string;
+}
+
+export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
+  dadosIniciais,
+  projetoIdPreSelecionado,
+  onSubmit,
+  textoBotao = 'Salvar',
+}) => {
+  const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [titulo, setTitulo] = useState(dadosIniciais?.titulo || '');
+  const [descricao, setDescricao] = useState(dadosIniciais?.descricao || '');
+  const [status, setStatus] = useState<Status>(dadosIniciais?.status || 'a-fazer');
+  const [prioridade, setPrioridade] = useState<Prioridade>(dadosIniciais?.prioridade || 'media');
+  const [responsavel, setResponsavel] = useState(dadosIniciais?.responsavel || '');
+  const [prazo, setPrazo] = useState(dadosIniciais?.prazo || '');
+  const [projetoId, setProjetoId] = useState(dadosIniciais?.projetoId || projetoIdPreSelecionado || '');
+
+  const [erros, setErros] = useState<ErrosForm>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    listarProjetos()
-      .then(setProjetos)
-      .catch(() => setErro('Não foi possível carregar os projetos.'))
-  }, [])
+    listarProjetos().then((data) => {
+      setProjetos(data);
+      if (!projetoId && data.length > 0) {
+        setProjetoId(data[0].id);
+      }
+    });
+  }, []);
 
-  function alterarCampo<K extends keyof NovaTarefa>(
-  campo: K,
-  valor: NovaTarefa[K]
-) {
-  // Atualiza o valor digitado pelo usuário
-  setCampos((anterior) => ({
-    ...anterior,
-    [campo]: valor,
-  }))
+  const validarCampos = (): boolean => {
+    const novosErros: ErrosForm = {};
+    if (!titulo.trim()) novosErros.titulo = 'O título é obrigatório.';
+    if (!responsavel.trim()) novosErros.responsavel = 'O responsável é obrigatório.';
+    if (!prazo) novosErros.prazo = 'O prazo é obrigatório.';
+    setErros(novosErros);
+    return Object.keys(novosErros).length === 0;
+  };
 
-  // Remove a mensagem de erro quando o campo é preenchido
-  if (typeof valor === 'string' && valor.trim() !== '') {
-    setErrosCampos((anterior) => ({
-      ...anterior,
-      [campo]: undefined,
-    }))
-  }
-}
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validarCampos()) return;
 
-  function validarCampos(dados: NovaTarefa): boolean {
-  const novosErros: Partial<Record<keyof NovaTarefa, string>> = {}
-
-  if (!dados.titulo.trim()) {
-    novosErros.titulo = 'O título é obrigatório.'
-  }
-
-  if (!dados.projetoId) {
-    novosErros.projetoId = 'Selecione um projeto.'
-  }
-
-  if (!dados.responsavel.trim()) {
-    novosErros.responsavel = 'Informe o responsável.'
-  }
-
-  if (!dados.prazo) {
-    novosErros.prazo = 'Informe o prazo.'
-  }
-
-  setErrosCampos(novosErros)
-
-  return Object.keys(novosErros).length === 0
-}
-
-  async function enviar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    if (salvando) return
-
-    const dados: NovaTarefa = {
-      ...campos,
-      titulo: campos.titulo.trim(),
-      descricao: campos.descricao.trim(),
-      responsavel: campos.responsavel.trim(),
-    }
-
-    if (!validarCampos(dados)) {
-      return
-    }
-
-    setErro(null)
-    setSalvando(true)
+    setIsSubmitting(true);
     try {
-      await onSalvar(dados)
-    } catch {
-      setErro('Não foi possível salvar a tarefa. Verifique a API.')
-      setSalvando(false)
+      await onSubmit({ titulo, descricao, status, prioridade, responsavel, prazo, projetoId });
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <form onSubmit={enviar}>
-      <div>
-        <label htmlFor="titulo-tarefa">Título</label>
+    <form onSubmit={handleSubmit} noValidate>
+      {/* Título */}
+      <div className="campo">
+        <label htmlFor="campo-titulo">
+          Título <span aria-hidden="true">*</span>
+        </label>
         <input
-          id="titulo-tarefa"
-          value={campos.titulo}
-          onChange={(e) => alterarCampo('titulo', e.target.value)}
-          aria-invalid={!!errosCampos.titulo}
-          aria-describedby={errosCampos.titulo ? 'erro-titulo' : undefined}
+          id="campo-titulo"
+          type="text"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+          aria-required="true"
+          aria-invalid={!!erros.titulo}
+          aria-describedby={erros.titulo ? 'erro-titulo' : undefined}
         />
-
-        {errosCampos.titulo && (
-          <p id="erro-titulo" role="alert" style={{ color: 'red' }}>
-            {errosCampos.titulo}
-          </p>
+        {erros.titulo && (
+          <span id="erro-titulo" className="mensagem-erro" role="alert">
+            ⚠️ {erros.titulo}
+          </span>
         )}
       </div>
 
-      <div>
-        <label htmlFor="descricao-tarefa">Descrição</label>
-        <textarea
-          id="descricao-tarefa"
-          value={campos.descricao}
-          onChange={(e) => alterarCampo('descricao', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="projeto-tarefa">Projeto</label>
+      {/* Seletor de Projeto */}
+      <div className="campo">
+        <label htmlFor="campo-projetoId">Projeto</label>
         <select
-          id="projeto-tarefa"
-          value={campos.projetoId}
-          onChange={(e) => alterarCampo('projetoId', e.target.value)}
-          aria-invalid={!!errosCampos.projetoId}
-          aria-describedby={errosCampos.projetoId ? 'erro-projeto' : undefined}
+          id="campo-projetoId"
+          value={projetoId}
+          onChange={(e) => setProjetoId(e.target.value)}
         >
-          <option value="">Selecione um projeto</option>
-          {projetos.map((projeto) => (
-            <option key={projeto.id} value={projeto.id}>
-              {projeto.nome}
+          {projetos.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.nome}
             </option>
           ))}
         </select>
-
-        {errosCampos.projetoId && (
-          <p id="erro-projeto" role="alert" style={{ color: 'red' }}>
-            {errosCampos.projetoId}
-          </p>
-        )}    
-
       </div>
 
-      <div>
-        <label htmlFor="status-tarefa">Status</label>
+      {/* Descrição */}
+      <div className="campo">
+        <label htmlFor="campo-descricao">Descrição</label>
+        <textarea
+          id="campo-descricao"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+        />
+      </div>
+
+      {/* Status */}
+      <div className="campo">
+        <label htmlFor="campo-status">Status</label>
         <select
-          id="status-tarefa"
-          value={campos.status}
-          onChange={(e) => alterarCampo('status', e.target.value as Status)}
+          id="campo-status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value as Status)}
         >
-          <option value="a-fazer">A fazer</option>
-          <option value="em-andamento">Em andamento</option>
-          <option value="em-revisao">Em revisão</option>
+          <option value="a-fazer">A Fazer</option>
+          <option value="em-andamento">Em Andamento</option>
+          <option value="em-revisao">Em Revisão</option>
           <option value="concluida">Concluída</option>
         </select>
       </div>
 
-      <div>
-        <label htmlFor="prioridade-tarefa">Prioridade</label>
+      {/* Prioridade */}
+      <div className="campo">
+        <label htmlFor="campo-prioridade">Prioridade</label>
         <select
-          id="prioridade-tarefa"
-          value={campos.prioridade}
-          onChange={(e) => alterarCampo('prioridade', e.target.value as Prioridade)}
+          id="campo-prioridade"
+          value={prioridade}
+          onChange={(e) => setPrioridade(e.target.value as Prioridade)}
         >
           <option value="baixa">Baixa</option>
           <option value="media">Média</option>
@@ -172,48 +141,51 @@ export function FormularioTarefa({ valoresIniciais, textoBotao, onSalvar }: Prop
         </select>
       </div>
 
-      <div>
-        <label htmlFor="responsavel-tarefa">Responsável</label>
+      {/* Responsável */}
+      <div className="campo">
+        <label htmlFor="campo-responsavel">
+          Responsável <span aria-hidden="true">*</span>
+        </label>
         <input
-          id="responsavel-tarefa"
-          value={campos.responsavel}
-          onChange={(e) => alterarCampo('responsavel', e.target.value)}
-          aria-invalid={!!errosCampos.responsavel}
-          aria-describedby={
-            errosCampos.responsavel ? 'erro-responsavel' : undefined
-          }
+          id="campo-responsavel"
+          type="text"
+          value={responsavel}
+          onChange={(e) => setResponsavel(e.target.value)}
+          aria-required="true"
+          aria-invalid={!!erros.responsavel}
+          aria-describedby={erros.responsavel ? 'erro-responsavel' : undefined}
         />
-
-        {errosCampos.responsavel && (
-          <p id="erro-responsavel" role="alert" style={{ color: 'red' }}>
-            {errosCampos.responsavel}
-          </p>
-        )}    
-      </div>
-
-      <div>
-        <label htmlFor="prazo-tarefa">Prazo</label>
-        <input
-          id="prazo-tarefa"
-          type="date"
-          value={campos.prazo}
-          onChange={(e) => alterarCampo('prazo', e.target.value)}
-          aria-invalid={!!errosCampos.prazo}
-          aria-describedby={errosCampos.prazo ? 'erro-prazo' : undefined}
-        />
-
-        {errosCampos.prazo && (
-          <p id="erro-prazo" role="alert" style={{ color: 'red' }}>
-            {errosCampos.prazo}
-          </p>
+        {erros.responsavel && (
+          <span id="erro-responsavel" className="mensagem-erro" role="alert">
+            ⚠️ {erros.responsavel}
+          </span>
         )}
       </div>
 
-      {erro && <p role="alert">{erro}</p>}
+      {/* Prazo */}
+      <div className="campo">
+        <label htmlFor="campo-prazo">
+          Prazo <span aria-hidden="true">*</span>
+        </label>
+        <input
+          id="campo-prazo"
+          type="date"
+          value={prazo}
+          onChange={(e) => setPrazo(e.target.value)}
+          aria-required="true"
+          aria-invalid={!!erros.prazo}
+          aria-describedby={erros.prazo ? 'erro-prazo' : undefined}
+        />
+        {erros.prazo && (
+          <span id="erro-prazo" className="mensagem-erro" role="alert">
+            ⚠️ {erros.prazo}
+          </span>
+        )}
+      </div>
 
-      <button type="submit" disabled={salvando}>
-        {salvando ? 'Salvando...' : textoBotao}
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Enviando...' : textoBotao}
       </button>
     </form>
-  )
-}
+  );
+};
