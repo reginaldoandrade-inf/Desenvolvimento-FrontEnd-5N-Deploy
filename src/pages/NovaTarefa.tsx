@@ -29,9 +29,10 @@ export function NovaTarefa() {
     <section>
       <h1>Nova tarefa</h1>
       <FormularioTarefa
-        valoresIniciais={{ ...tarefaVazia, projetoId }}
+        dadosIniciais={tarefaVazia}
+        projetoIdPreSelecionado={projetoId}
         textoBotao="Cadastrar tarefa"
-        onSalvar={salvar}
+        onSubmit={salvar}
       />
       <Link to={projetoId ? `/projetos/${projetoId}` : '/'}>Cancelar</Link>
     </section>

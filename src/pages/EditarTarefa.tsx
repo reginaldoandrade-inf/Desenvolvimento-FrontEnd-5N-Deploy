@@ -40,9 +40,9 @@ export function EditarTarefa() {
     <section>
       <h1>Editar tarefa</h1>
       <FormularioTarefa
-        valoresIniciais={valores}
+        dadosIniciais={valores}
         textoBotao="Salvar alterações"
-        onSalvar={salvar}
+        onSubmit={salvar}
       />
       <Link to={`/tarefas/${id}`}>Cancelar</Link>
     </section>
