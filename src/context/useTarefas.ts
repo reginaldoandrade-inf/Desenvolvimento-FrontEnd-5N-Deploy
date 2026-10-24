@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { Prioridade, Status, Tarefa } from '../tipos'
 
-// '' significa "todos" nos filtros de status e prioridade.
 export type FiltrosTarefas = {
   busca: string
   status: Status | ''

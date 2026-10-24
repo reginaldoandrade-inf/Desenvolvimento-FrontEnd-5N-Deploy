@@ -16,7 +16,6 @@ export function App() {
       <ProvedorTarefas>
         <Routes>
           <Route path="/" element={<Layout />}>
-            {/* Abre a lista de tarefas ao carregar a página inicial / */}
             <Route index element={<ListaTarefas />} />
 
             {/* Rotas de Tarefas */}

@@ -1,9 +1,34 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { ReactNode } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { listarTarefas } from '../services/api'
-import type { Tarefa } from '../tipos'
-import { ContextoTarefas } from './useTarefas'
-import type { FiltrosTarefas, ValorContextoTarefas } from './useTarefas'
+import type { Prioridade, Status, Tarefa } from '../tipos'
+
+export type FiltrosTarefas = {
+  busca: string
+  status: Status | ''
+  prioridade: Prioridade | ''
+}
+
+type ValorContextoTarefas = {
+  tarefas: Tarefa[]
+  tarefasFiltradas: Tarefa[]
+  filtros: FiltrosTarefas
+  setFiltros: Dispatch<SetStateAction<FiltrosTarefas>>
+  carregando: boolean
+  erro: string | null
+  recarregarTarefas: () => Promise<void>
+  adicionarTarefaNoEstado: (tarefa: Tarefa) => void
+  atualizarTarefaNoEstado: (tarefa: Tarefa) => void
+}
+
+const ContextoTarefas = createContext<ValorContextoTarefas | null>(null)
 
 const filtrosIniciais: FiltrosTarefas = {
   busca: '',
@@ -17,7 +42,6 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
 
-  // Carrega uma vez no início. O sinalizador evita atualizações após desmontar.
   useEffect(() => {
     let ativo = true
 
@@ -38,7 +62,6 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Disponível para atualizar a lista quando necessário, sem recarregar a página.
   const recarregarTarefas = useCallback(async () => {
     setCarregando(true)
     setErro(null)
@@ -52,7 +75,6 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Para uso após POST e PATCH: atualiza o React sem dar F5.
   const adicionarTarefaNoEstado = useCallback((tarefa: Tarefa) => {
     setTarefas((anteriores) => [...anteriores, tarefa])
   }, [])
@@ -63,7 +85,6 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     )
   }, [])
 
-  // Estado derivado: não criar outro useState para tarefasFiltradas.
   const tarefasFiltradas = useMemo(() => {
     const busca = filtros.busca.trim().toLocaleLowerCase('pt-BR')
 
@@ -100,3 +121,10 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
   return <ContextoTarefas.Provider value={valor}>{children}</ContextoTarefas.Provider>
 }
 
+export function useTarefas() {
+  const contexto = useContext(ContextoTarefas)
+  if (!contexto) {
+    throw new Error('useTarefas deve ser usado dentro de ProvedorTarefas.')
+  }
+  return contexto
+}
