@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ProvedorTarefas } from './context/TarefasContext';
 import { Layout } from './components/Layout';
 import { ListaTarefas } from './pages/ListaTarefas';
 import { DetalheTarefa } from './pages/DetalheTarefa';
@@ -12,27 +13,28 @@ import { NaoEncontrada } from './pages/NaoEncontrada';
 export function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          {/* Abre a lista de tarefas ao carregar a página inicial / */}
-          <Route index element={<ListaTarefas />} />
-          
-          {/* Rotas de Tarefas */}
-          <Route path="tarefas" element={<ListaTarefas />} />
-          <Route path="tarefas/nova" element={<NovaTarefa />} />
-          <Route path="tarefas/:id/editar" element={<EditarTarefa />} />
-          <Route path="tarefas/:id" element={<DetalheTarefa />} />
-          
-          {/* Rotas de Projetos */}
-          <Route path="projetos" element={<ListaProjetos />} />
-          <Route path="projetos/novo" element={<FormularioProjeto />} />
-          <Route path="projetos/:id/editar" element={<FormularioProjeto />} />
-          <Route path="projetos/:id" element={<DetalheProjeto />} />
-          
-          {/* Rota para páginas não encontradas (404) */}
-          <Route path="*" element={<NaoEncontrada />} />
-        </Route>
-      </Routes>
+      <ProvedorTarefas>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<ListaTarefas />} />
+
+            {/* Rotas de Tarefas */}
+            <Route path="tarefas" element={<ListaTarefas />} />
+            <Route path="tarefas/nova" element={<NovaTarefa />} />
+            <Route path="tarefas/:id/editar" element={<EditarTarefa />} />
+            <Route path="tarefas/:id" element={<DetalheTarefa />} />
+
+            {/* Rotas de Projetos */}
+            <Route path="projetos" element={<ListaProjetos />} />
+            <Route path="projetos/novo" element={<FormularioProjeto />} />
+            <Route path="projetos/:id/editar" element={<FormularioProjeto />} />
+            <Route path="projetos/:id" element={<DetalheProjeto />} />
+
+            {/* Rota para páginas não encontradas (404) */}
+            <Route path="*" element={<NaoEncontrada />} />
+          </Route>
+        </Routes>
+      </ProvedorTarefas>
     </BrowserRouter>
   );
 }
