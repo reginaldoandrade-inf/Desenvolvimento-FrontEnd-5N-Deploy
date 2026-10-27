@@ -1,0 +1,137 @@
+/* Issue #27 — visão de quadro (/quadro). Estilos só desta tela. */
+
+.quadro-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.quadro-topo h1 { margin: 0; }
+
+.quadro-topo a {
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.quadro-aviso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #6b4e00;
+  background: #fff8e6;
+  border: 1px solid #f3d58a;
+  border-radius: 10px;
+}
+
+.quadro-aviso button {
+  padding: 8px 14px;
+}
+
+.quadro-colunas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.quadro-coluna {
+  --cor-coluna: #64748b;
+  min-width: 0;
+  padding: 14px;
+  background: #eef2f7;
+  border: 1px solid #dfe6ef;
+  border-top: 4px solid var(--cor-coluna);
+  border-radius: 12px;
+}
+
+.quadro-coluna--a-fazer { --cor-coluna: #64748b; }
+.quadro-coluna--em-andamento { --cor-coluna: #245cbe; }
+.quadro-coluna--em-revisao { --cor-coluna: #c27c0e; }
+.quadro-coluna--concluida { --cor-coluna: #1f8a5b; }
+
+.quadro-coluna-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.quadro-coluna-cabecalho h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+.quadro-contador {
+  min-width: 28px;
+  padding: 2px 9px;
+  text-align: center;
+  font-size: .85rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--cor-coluna);
+  border-radius: 999px;
+}
+
+.quadro-coluna ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quadro-coluna li {
+  display: grid;
+  gap: 6px;
+}
+
+.quadro-coluna li > article.cartao-tarefa {
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 10px;
+}
+
+.quadro-coluna article.cartao-tarefa h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.quadro-coluna article.cartao-tarefa p {
+  margin: 2px 0;
+  font-size: .9rem;
+}
+
+.quadro-coluna li > a {
+  padding-left: 4px;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.quadro-vazio {
+  margin: 0;
+  padding: 18px 10px;
+  text-align: center;
+  font-size: .9rem;
+  color: #718096;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+}
+
+@media (max-width: 650px) {
+  .quadro-colunas {
+    grid-template-columns: 1fr;
+    overflow-x: visible;
+  }
+}
