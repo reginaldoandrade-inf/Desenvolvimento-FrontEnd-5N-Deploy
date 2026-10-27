@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useTarefas } from '../context/TarefasContext';
 import { TarefaCard } from '../components/TarefaCard';
+import type { Status, Prioridade } from '../tipos';
 
 export function ListaTarefas() {
   const {
@@ -12,6 +13,14 @@ export function ListaTarefas() {
     erro,
   } = useTarefas();
 
+  const limparFiltros = () => {
+    setFiltros({
+      busca: '',
+      status: '',
+      prioridade: '',
+    });
+  };
+
   if (carregando) return <p>Carregando tarefas...</p>;
   if (erro) return <p style={{ color: 'red' }}>{erro}</p>;
 
@@ -21,8 +30,18 @@ export function ListaTarefas() {
 
       <Link to="/tarefas/nova">+ Nova tarefa</Link>
 
-      {/* Campo de busca por título */}
-      <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+      {/* Área de busca e filtros */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '12px',
+          marginTop: '20px',
+          marginBottom: '20px',
+          alignItems: 'center',
+        }}
+      >
+        {/* Busca por título */}
         <input
           type="search"
           placeholder="Buscar tarefa pelo título..."
@@ -36,12 +55,53 @@ export function ListaTarefas() {
           }
           style={{
             padding: '10px',
-            width: '100%',
-            maxWidth: '400px',
             borderRadius: '6px',
             border: '1px solid #ccc',
+            flex: '1 1 220px',
           }}
         />
+
+        {/* Filtro por status */}
+        <select
+          aria-label="Filtrar por status"
+          value={filtros.status}
+          onChange={(evento) =>
+            setFiltros((anteriores) => ({
+              ...anteriores,
+              status: evento.target.value as Status | '',
+            }))
+          }
+          style={{ padding: '10px', borderRadius: '6px' }}
+        >
+          <option value="">Todos os status</option>
+          <option value="a-fazer">A fazer</option>
+          <option value="em-andamento">Em andamento</option>
+          <option value="em-revisao">Em revisão</option>
+          <option value="concluida">Concluída</option>
+        </select>
+
+        {/* Filtro por prioridade */}
+        <select
+          aria-label="Filtrar por prioridade"
+          value={filtros.prioridade}
+          onChange={(evento) =>
+            setFiltros((anteriores) => ({
+              ...anteriores,
+              prioridade: evento.target.value as Prioridade | '',
+            }))
+          }
+          style={{ padding: '10px', borderRadius: '6px' }}
+        >
+          <option value="">Todas as prioridades</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+        </select>
+
+        {/* Limpar filtros */}
+        <button type="button" onClick={limparFiltros}>
+          Limpar filtros
+        </button>
       </div>
 
       {/* Lista de tarefas filtradas */}
