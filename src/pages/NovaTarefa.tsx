@@ -1,6 +1,7 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { FormularioTarefa } from '../components/FormularioTarefa'
 import { criarTarefa } from '../services/api'
+import { useTarefas } from '../context/useTarefas'
 import type { NovaTarefa as DadosTarefa } from '../tipos'
 
 const tarefaVazia: DadosTarefa = {
@@ -15,11 +16,13 @@ const tarefaVazia: DadosTarefa = {
 
 export function NovaTarefa() {
   const navegar = useNavigate()
+  const { adicionarTarefaNoEstado } = useTarefas()
   const [parametros] = useSearchParams()
   const projetoId = parametros.get('projetoId') ?? ''
 
   async function salvar(dados: DadosTarefa) {
-    await criarTarefa(dados)
+    const tarefa = await criarTarefa(dados)
+    adicionarTarefaNoEstado(tarefa)
     navegar(projetoId ? `/projetos/${projetoId}` : '/')
   }
 

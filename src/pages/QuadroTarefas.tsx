@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useTarefas } from '../context/TarefasContext'
+import { useTarefas } from '../context/useTarefas'
 import { TarefaCard } from '../components/TarefaCard'
 import type { Prioridade, Status, Tarefa } from '../tipos'
 import './QuadroTarefas.css'
