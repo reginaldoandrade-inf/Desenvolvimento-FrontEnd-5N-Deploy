@@ -12,10 +12,13 @@ export function Layout() {
           </div>
         </div>
 
+
         <nav aria-label="Navegação principal">
           <Link to="/tarefas">Tarefas</Link>
+          <Link to="/quadro">Quadro</Link>
           <Link to="/projetos">Projetos</Link>
         </nav>
+
       </header>
 
       <main>
