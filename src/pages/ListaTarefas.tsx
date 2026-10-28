@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { useTarefas } from '../context/TarefasContext';
+import { useTarefas } from '../context/useTarefas';
 import { TarefaCard } from '../components/TarefaCard';
 import type { Status, Prioridade } from '../tipos';
 

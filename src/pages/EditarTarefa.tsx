@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FormularioTarefa } from '../components/FormularioTarefa'
 import { atualizarTarefa, buscarTarefa } from '../services/api'
+import { useTarefas } from '../context/useTarefas'
 import type { NovaTarefa } from '../tipos'
 
 export function EditarTarefa() {
   const { id } = useParams<{ id: string }>()
   const navegar = useNavigate()
+  const { atualizarTarefaNoEstado } = useTarefas()
   const [valores, setValores] = useState<NovaTarefa | null>(null)
   const [erro, setErro] = useState<string | null>(null)
 
@@ -20,7 +22,8 @@ export function EditarTarefa() {
 
   async function salvar(dados: NovaTarefa) {
     if (!id) return
-    await atualizarTarefa(id, dados)
+    const tarefaAtualizada = await atualizarTarefa(id, dados)
+    atualizarTarefaNoEstado(tarefaAtualizada)
     navegar(`/tarefas/${id}`)
   }
 
