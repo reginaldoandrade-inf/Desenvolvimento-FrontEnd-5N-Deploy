@@ -18,6 +18,7 @@ export type ValorContextoTarefas = {
   recarregarTarefas: () => Promise<void>
   adicionarTarefaNoEstado: (tarefa: Tarefa) => void
   atualizarTarefaNoEstado: (tarefa: Tarefa) => void
+  removerTarefaNoEstado: (id: string) => void
 }
 
 export const ContextoTarefas = createContext<ValorContextoTarefas | null>(null)

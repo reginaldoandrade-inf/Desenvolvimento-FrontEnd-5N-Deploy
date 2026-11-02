@@ -86,5 +86,20 @@ export function atualizarProjeto(
     `/projetos/${encodeURIComponent(id)}`,
     'PATCH',
     dados,
-  )
+  )  
 }
+
+export async function excluirTarefa(id: string): Promise<void> {
+  const resposta = await fetch(
+    `${API_URL}/tarefas/${encodeURIComponent(id)}`,
+    {
+      method: 'DELETE',
+    }
+  )
+
+  if (!resposta.ok) {
+    throw new Error('Não foi possível excluir a tarefa.')
+  }
+}
+
+

@@ -66,6 +66,12 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     )
   }, [])
 
+  const removerTarefaNoEstado = useCallback((id: string) => {
+    setTarefas((anteriores) =>
+      anteriores.filter((tarefa) => tarefa.id !== id)
+   )
+  }, [])
+
   const tarefasFiltradas = useMemo(() => {
     const busca = filtros.busca.trim().toLocaleLowerCase('pt-BR')
 
@@ -88,6 +94,7 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     recarregarTarefas,
     adicionarTarefaNoEstado,
     atualizarTarefaNoEstado,
+    removerTarefaNoEstado,
   }), [
     tarefas,
     tarefasFiltradas,
@@ -97,6 +104,7 @@ export function ProvedorTarefas({ children }: { children: ReactNode }) {
     recarregarTarefas,
     adicionarTarefaNoEstado,
     atualizarTarefaNoEstado,
+    removerTarefaNoEstado,
   ])
 
   return <ContextoTarefas.Provider value={valor}>{children}</ContextoTarefas.Provider>
