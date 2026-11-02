@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { NovaTarefa, Projeto, Status, Prioridade } from '../tipos';
 import { listarProjetos } from '../services/api';
+import { EstadoCarregamento } from './EstadoCarregamento';
 
 interface ErrosForm {
   titulo?: string;
@@ -22,6 +23,7 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
   textoBotao = 'Salvar',
 }) => {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
+  const [carregandoProjetos, setCarregandoProjetos] = useState(true);
   const [titulo, setTitulo] = useState(dadosIniciais?.titulo || '');
   const [descricao, setDescricao] = useState(dadosIniciais?.descricao || '');
   const [status, setStatus] = useState<Status>(dadosIniciais?.status || 'a-fazer');
@@ -51,6 +53,9 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
         if (ativo) {
           console.error('Erro ao carregar projetos:', err)
         }
+      })
+      .finally(() => {
+        if (ativo) setCarregandoProjetos(false)
       })
 
     return () => {
@@ -121,6 +126,7 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
           id="campo-projetoId"
           value={projetoId}
           onChange={(e) => setProjetoId(e.target.value)}
+          disabled={carregandoProjetos}
         >
           {projetos.map((p) => (
             <option key={p.id} value={p.id}>
@@ -128,6 +134,9 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
             </option>
           ))}
         </select>
+        {carregandoProjetos && (
+          <EstadoCarregamento mensagem="Carregando projetos..." compacto />
+        )}
       </div>
 
       {/* Descrição */}

@@ -7,6 +7,7 @@ import {
   criarProjeto,
 } from '../services/api'
 import type { NovoProjeto } from '../services/api'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
 
 const camposIniciais: NovoProjeto = {
   nome: '',
@@ -89,7 +90,7 @@ export function FormularioProjeto() {
     }
   }
 
-  if (carregando) return <p>Carregando projeto...</p>
+  if (carregando) return <EstadoCarregamento mensagem="Carregando projeto para edição..." />
 
   if (erroCarregamento) {
     return (

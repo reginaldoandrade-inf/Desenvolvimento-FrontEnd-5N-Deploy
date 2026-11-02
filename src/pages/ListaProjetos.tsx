@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { listarProjetos } from '../services/api'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import type { Projeto } from '../tipos'
 
 export function ListaProjetos() {
@@ -39,7 +40,7 @@ export function ListaProjetos() {
   }, [])
 
   if (carregando) {
-    return <p>Carregando projetos...</p>
+    return <EstadoCarregamento mensagem="Carregando projetos..." />
   }
 
   if (erro) {

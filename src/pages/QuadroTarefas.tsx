@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTarefas } from '../context/useTarefas'
 import { TarefaCard } from '../components/TarefaCard'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import type { Prioridade, Status, Tarefa } from '../tipos'
 import './QuadroTarefas.css'
 
@@ -32,7 +33,7 @@ export function QuadroTarefas() {
     setFiltros({ busca: '', status: '', prioridade: '' })
   }
 
-  if (carregando) return <p>Carregando quadro...</p>
+  if (carregando) return <EstadoCarregamento mensagem="Carregando quadro..." />
   if (erro) return <p role="alert">{erro}</p>
 
   return (
