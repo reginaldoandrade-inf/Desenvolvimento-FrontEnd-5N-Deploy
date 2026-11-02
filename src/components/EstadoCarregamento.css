@@ -1,0 +1,41 @@
+.estado-carregamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 110px;
+  padding: 24px 16px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.estado-carregamento--compacto {
+  justify-content: flex-start;
+  min-height: 0;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+
+.estado-carregamento__spinner {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #dbeafe;
+  border-top-color: #245cbe;
+  border-radius: 50%;
+  animation: estado-carregamento-girar 750ms linear infinite;
+}
+
+.estado-carregamento--compacto .estado-carregamento__spinner {
+  width: 17px;
+  height: 17px;
+  border-width: 2px;
+}
+
+@keyframes estado-carregamento-girar {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .estado-carregamento__spinner { animation: none; }
+}

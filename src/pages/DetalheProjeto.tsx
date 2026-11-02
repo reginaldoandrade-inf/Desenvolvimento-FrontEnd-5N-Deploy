@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { buscarProjetoComTarefas } from '../services/api';
 import { TarefaCard } from '../components/TarefaCard';
+import { EstadoCarregamento } from '../components/EstadoCarregamento';
 import type { Projeto, Tarefa } from '../tipos';
 
 type ProjetoComTarefas = Projeto & { tarefas: Tarefa[] };
@@ -20,7 +21,7 @@ export function DetalheProjeto() {
     }
   }, [id]);
 
-  if (carregando) return <p>Carregando dados do projeto...</p>;
+  if (carregando) return <EstadoCarregamento mensagem="Carregando dados do projeto..." />;
   if (!dados) return <p>Projeto não encontrado.</p>;
 
   return (

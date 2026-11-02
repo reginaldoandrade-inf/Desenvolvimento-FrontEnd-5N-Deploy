@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useTarefas } from '../context/useTarefas';
 import { TarefaCard } from '../components/TarefaCard';
+import { EstadoCarregamento } from '../components/EstadoCarregamento';
 import type { Status, Prioridade } from '../tipos';
 
 export function ListaTarefas() {
@@ -21,7 +22,7 @@ export function ListaTarefas() {
     });
   };
 
-  if (carregando) return <p>Carregando tarefas...</p>;
+  if (carregando) return <EstadoCarregamento mensagem="Carregando tarefas..." />;
   if (erro) return <p style={{ color: 'red' }}>{erro}</p>;
 
   return (

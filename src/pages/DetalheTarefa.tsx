@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { buscarTarefa } from '../services/api'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import type { Tarefa } from '../tipos'
 
 type ResultadoBusca = {
@@ -57,7 +58,7 @@ export function DetalheTarefa() {
   }
 
   if (!resultado || resultado.id !== id) {
-    return <p>Carregando detalhes...</p>
+    return <EstadoCarregamento mensagem="Carregando detalhes da tarefa..." />
   }
 
   if (resultado.erro) {

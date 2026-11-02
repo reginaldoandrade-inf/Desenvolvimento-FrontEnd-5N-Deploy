@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FormularioTarefa } from '../components/FormularioTarefa'
 import { atualizarTarefa, buscarTarefa } from '../services/api'
 import { useTarefas } from '../context/useTarefas'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import type { NovaTarefa } from '../tipos'
 
 export function EditarTarefa() {
@@ -36,7 +37,7 @@ export function EditarTarefa() {
     )
   }
 
-  if (!valores) return <p>Carregando tarefa...</p>
+  if (!valores) return <EstadoCarregamento mensagem="Carregando tarefa para edição..." />
 
   return (
     <section>
