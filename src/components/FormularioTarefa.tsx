@@ -32,30 +32,31 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
 
   const [erros, setErros] = useState<ErrosForm>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState<string | null>(null);
 
-useEffect(() => {
-  let ativo = true
+  useEffect(() => {
+    let ativo = true
 
-  listarProjetos()
-    .then((data) => {
-      if (!ativo) return
+    listarProjetos()
+      .then((data) => {
+        if (!ativo) return
 
-      setProjetos(data)
+        setProjetos(data)
 
-      if (data.length > 0) {
-        setProjetoId((anterior) => anterior || data[0].id)
-      }
-    })
-    .catch((err) => {
-      if (ativo) {
-        console.error('Erro ao carregar projetos:', err)
-      }
-    })
+        if (data.length > 0) {
+          setProjetoId((anterior) => anterior || data[0].id)
+        }
+      })
+      .catch((err) => {
+        if (ativo) {
+          console.error('Erro ao carregar projetos:', err)
+        }
+      })
 
-  return () => {
-    ativo = false
-  }
-}, [])
+    return () => {
+      ativo = false
+    }
+  }, [])
 
   const validarCampos = (): boolean => {
     const novosErros: ErrosForm = {};
@@ -71,8 +72,20 @@ useEffect(() => {
     if (!validarCampos()) return;
 
     setIsSubmitting(true);
+    setErroEnvio(null);
+
     try {
-      await onSubmit({ titulo, descricao, status, prioridade, responsavel, prazo, projetoId });
+      await onSubmit({
+        titulo,
+        descricao,
+        status,
+        prioridade,
+        responsavel,
+        prazo,
+        projetoId,
+      });
+    } catch {
+      setErroEnvio('Não foi possível salvar a tarefa. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -197,6 +210,12 @@ useEffect(() => {
           </span>
         )}
       </div>
+
+      {erroEnvio && (
+        <p role="alert" className="mensagem-erro">
+          {erroEnvio}
+        </p>
+      )}
 
       <button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Enviando...' : textoBotao}
