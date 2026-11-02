@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTarefas } from '../context/useTarefas'
 import { TarefaCard } from '../components/TarefaCard'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
 import type { Prioridade, Status, Tarefa } from '../tipos'
 import './QuadroTarefas.css'
 
@@ -25,7 +26,7 @@ function ordenarTarefas(a: Tarefa, b: Tarefa) {
 }
 
 export function QuadroTarefas() {
-  const { tarefasFiltradas, filtros, setFiltros, carregando, erro } = useTarefas()
+  const { tarefasFiltradas, filtros, setFiltros, carregando, erro, recarregarTarefas } = useTarefas()
 
   const filtrosAtivos = Boolean(filtros.busca.trim() || filtros.status || filtros.prioridade)
 
@@ -34,7 +35,9 @@ export function QuadroTarefas() {
   }
 
   if (carregando) return <EstadoCarregamento mensagem="Carregando quadro..." />
-  if (erro) return <p role="alert">{erro}</p>
+  if (erro) {
+    return <EstadoErro mensagem={erro} onTentarNovamente={() => { void recarregarTarefas() }} />
+  }
 
   return (
     <section className="quadro">

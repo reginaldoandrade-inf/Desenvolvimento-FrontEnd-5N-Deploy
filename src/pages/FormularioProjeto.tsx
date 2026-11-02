@@ -8,6 +8,7 @@ import {
 } from '../services/api'
 import type { NovoProjeto } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
 
 const camposIniciais: NovoProjeto = {
   nome: '',
@@ -26,6 +27,7 @@ export function FormularioProjeto() {
   const [salvando, setSalvando] = useState(false)
   const [erroCarregamento, setErroCarregamento] = useState<string | null>(null)
   const [erroSalvamento, setErroSalvamento] = useState<string | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
   useEffect(() => {
     if (!id) return
@@ -52,7 +54,13 @@ export function FormularioProjeto() {
     return () => {
       ativo = false
     }
-  }, [id])
+  }, [id, tentativa])
+
+  function tentarNovamente() {
+    setErroCarregamento(null)
+    setCarregando(true)
+    setTentativa((atual) => atual + 1)
+  }
 
   function alterarCampo(campo: keyof NovoProjeto, valor: string) {
     setCampos((anterior) => ({ ...anterior, [campo]: valor }))
@@ -95,7 +103,7 @@ export function FormularioProjeto() {
   if (erroCarregamento) {
     return (
       <section>
-        <p role="alert">{erroCarregamento}</p>
+        <EstadoErro mensagem={erroCarregamento} onTentarNovamente={tentarNovamente} />
         <Link to="/projetos">Voltar para projetos</Link>
       </section>
     )

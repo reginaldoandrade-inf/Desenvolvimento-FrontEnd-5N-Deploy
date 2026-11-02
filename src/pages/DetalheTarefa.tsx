@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { buscarTarefa } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
 import type { Tarefa } from '../tipos'
 
 type ResultadoBusca = {
@@ -15,6 +16,7 @@ export function DetalheTarefa() {
   const { id } = useParams<{ id: string }>()
 
   const [resultado, setResultado] = useState<ResultadoBusca | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
   useEffect(() => {
     if (!id) return
@@ -46,7 +48,12 @@ export function DetalheTarefa() {
     return () => {
       ativo = false
     }
-  }, [id])
+  }, [id, tentativa])
+
+  function tentarNovamente() {
+    setResultado(null)
+    setTentativa((atual) => atual + 1)
+  }
 
   if (!id) {
     return (
@@ -64,7 +71,7 @@ export function DetalheTarefa() {
   if (resultado.erro) {
     return (
       <div>
-        <p role="alert">{resultado.erro}</p>
+        <EstadoErro mensagem={resultado.erro} onTentarNovamente={tentarNovamente} />
         <Link to="/tarefas">Voltar para a lista de tarefas</Link>
       </div>
     )
