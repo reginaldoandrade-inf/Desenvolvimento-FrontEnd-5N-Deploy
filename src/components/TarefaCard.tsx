@@ -51,7 +51,7 @@ export function TarefaCard({ tarefa }: Props) {
       await excluirTarefa(tarefa.id)
       removerTarefaNoEstado(tarefa.id)
     } catch {
-      alert('Não foi possível excluir a tarefa.')
+      setErro('Não foi possível excluir a tarefa. Tente novamente.')
     } finally {
       setExcluindo(false)
     }
