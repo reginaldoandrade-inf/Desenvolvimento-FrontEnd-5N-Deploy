@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTarefas } from '../context/useTarefas';
 import { TarefaCard } from '../components/TarefaCard';
 import { EstadoCarregamento } from '../components/EstadoCarregamento';
+import { EstadoErro } from '../components/EstadoErro';
 import type { Status, Prioridade } from '../tipos';
 
 export function ListaTarefas() {
@@ -12,6 +13,7 @@ export function ListaTarefas() {
     setFiltros,
     carregando,
     erro,
+    recarregarTarefas,
   } = useTarefas();
 
   const limparFiltros = () => {
@@ -23,7 +25,14 @@ export function ListaTarefas() {
   };
 
   if (carregando) return <EstadoCarregamento mensagem="Carregando tarefas..." />;
-  if (erro) return <p style={{ color: 'red' }}>{erro}</p>;
+  if (erro) {
+    return (
+      <EstadoErro
+        mensagem={erro}
+        onTentarNovamente={() => { void recarregarTarefas() }}
+      />
+    );
+  }
 
   return (
     <div>

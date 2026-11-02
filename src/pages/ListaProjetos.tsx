@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom'
 
 import { listarProjetos } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
 import type { Projeto } from '../tipos'
 
 export function ListaProjetos() {
   const [projetos, setProjetos] = useState<Projeto[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
   useEffect(() => {
     let ativo = true
@@ -37,14 +39,20 @@ export function ListaProjetos() {
     return () => {
       ativo = false
     }
-  }, [])
+  }, [tentativa])
+
+  function tentarNovamente() {
+    setErro(null)
+    setCarregando(true)
+    setTentativa((atual) => atual + 1)
+  }
 
   if (carregando) {
     return <EstadoCarregamento mensagem="Carregando projetos..." />
   }
 
   if (erro) {
-    return <p role="alert">{erro}</p>
+    return <EstadoErro mensagem={erro} onTentarNovamente={tentarNovamente} />
   }
 
   return (

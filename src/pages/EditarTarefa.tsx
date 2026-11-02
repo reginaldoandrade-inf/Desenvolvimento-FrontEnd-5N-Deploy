@@ -4,6 +4,7 @@ import { FormularioTarefa } from '../components/FormularioTarefa'
 import { atualizarTarefa, buscarTarefa } from '../services/api'
 import { useTarefas } from '../context/useTarefas'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
 import type { NovaTarefa } from '../tipos'
 
 export function EditarTarefa() {
@@ -12,14 +13,28 @@ export function EditarTarefa() {
   const { atualizarTarefaNoEstado } = useTarefas()
   const [valores, setValores] = useState<NovaTarefa | null>(null)
   const [erro, setErro] = useState<string | null>(null)
+  const [tentativa, setTentativa] = useState(0)
 
   useEffect(() => {
     if (!id) return
+    let ativo = true
 
     buscarTarefa(id)
-      .then(({ id: _id, ...dados }) => setValores(dados))
-      .catch(() => setErro('Não foi possível carregar esta tarefa.'))
-  }, [id])
+      .then(({ id: _id, ...dados }) => {
+        if (ativo) setValores(dados)
+      })
+      .catch(() => {
+        if (ativo) setErro('Não foi possível carregar esta tarefa.')
+      })
+
+    return () => { ativo = false }
+  }, [id, tentativa])
+
+  function tentarNovamente() {
+    setErro(null)
+    setValores(null)
+    setTentativa((atual) => atual + 1)
+  }
 
   async function salvar(dados: NovaTarefa) {
     if (!id) return
@@ -31,7 +46,7 @@ export function EditarTarefa() {
   if (erro) {
     return (
       <section>
-        <p role="alert">{erro}</p>
+        <EstadoErro mensagem={erro} onTentarNovamente={tentarNovamente} />
         <Link to="/">Voltar para a lista de tarefas</Link>
       </section>
     )
