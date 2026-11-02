@@ -1,0 +1,46 @@
+.estado-erro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  min-height: 110px;
+  padding: 20px;
+  color: #9f1d17;
+  background: #fff6f5;
+  border: 1px solid #efb3ad;
+  border-radius: 10px;
+}
+
+.estado-erro--compacto {
+  min-height: 0;
+  padding: 12px;
+  gap: 8px;
+}
+
+.estado-erro__mensagem {
+  margin: 0;
+  color: inherit;
+  font-weight: 600;
+}
+
+.estado-erro__botao {
+  width: fit-content;
+  padding: 9px 14px;
+  border: 1px solid #b42318;
+  border-radius: 8px;
+  background: #b42318;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+.estado-erro__botao:hover:not(:disabled) {
+  background: #8e1c14;
+}
+
+.estado-erro__botao:focus-visible {
+  outline: 3px solid #f3a8a3;
+  outline-offset: 3px;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { NovaTarefa, Projeto, Status, Prioridade } from '../tipos';
 import { listarProjetos } from '../services/api';
 import { EstadoCarregamento } from './EstadoCarregamento';
+import { EstadoErro } from './EstadoErro';
 
 interface ErrosForm {
   titulo?: string;
@@ -24,6 +25,8 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
 }) => {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [carregandoProjetos, setCarregandoProjetos] = useState(true);
+  const [erroProjetos, setErroProjetos] = useState<string | null>(null);
+  const [tentativaProjetos, setTentativaProjetos] = useState(0);
   const [titulo, setTitulo] = useState(dadosIniciais?.titulo || '');
   const [descricao, setDescricao] = useState(dadosIniciais?.descricao || '');
   const [status, setStatus] = useState<Status>(dadosIniciais?.status || 'a-fazer');
@@ -52,6 +55,7 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
       .catch((err) => {
         if (ativo) {
           console.error('Erro ao carregar projetos:', err)
+          setErroProjetos('Não foi possível carregar os projetos disponíveis.')
         }
       })
       .finally(() => {
@@ -61,7 +65,13 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
     return () => {
       ativo = false
     }
-  }, [])
+  }, [tentativaProjetos])
+
+  function tentarCarregarProjetosNovamente() {
+    setErroProjetos(null)
+    setCarregandoProjetos(true)
+    setTentativaProjetos((atual) => atual + 1)
+  }
 
   const validarCampos = (): boolean => {
     const novosErros: ErrosForm = {};
@@ -126,7 +136,7 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
           id="campo-projetoId"
           value={projetoId}
           onChange={(e) => setProjetoId(e.target.value)}
-          disabled={carregandoProjetos}
+          disabled={carregandoProjetos || Boolean(erroProjetos)}
         >
           {projetos.map((p) => (
             <option key={p.id} value={p.id}>
@@ -136,6 +146,13 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
         </select>
         {carregandoProjetos && (
           <EstadoCarregamento mensagem="Carregando projetos..." compacto />
+        )}
+        {erroProjetos && (
+          <EstadoErro
+            mensagem={erroProjetos}
+            onTentarNovamente={tentarCarregarProjetosNovamente}
+            compacto
+          />
         )}
       </div>
 
@@ -226,7 +243,7 @@ export const FormularioTarefa: React.FC<FormularioTarefaProps> = ({
         </p>
       )}
 
-      <button type="submit" disabled={isSubmitting}>
+      <button type="submit" disabled={isSubmitting || carregandoProjetos || Boolean(erroProjetos)}>
         {isSubmitting ? 'Enviando...' : textoBotao}
       </button>
     </form>
