@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTarefas } from '../context/useTarefas'
-import { atualizarTarefa } from '../services/api'
+import { atualizarTarefa, excluirTarefa } from '../services/api'
 import type { Status, Tarefa } from '../tipos'
 
 type Props = {
@@ -15,8 +15,9 @@ const opcoesStatus: { value: Status; label: string }[] = [
 ]
 
 export function TarefaCard({ tarefa }: Props) {
-  const { tarefas, atualizarTarefaNoEstado } = useTarefas()
+  const { tarefas, atualizarTarefaNoEstado, removerTarefaNoEstado } = useTarefas()
   const [salvando, setSalvando] = useState(false)
+  const [excluindo, setExcluindo] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
 
   const tarefaAtual = tarefas.find((item) => item.id === tarefa.id) ?? tarefa
@@ -34,6 +35,25 @@ export function TarefaCard({ tarefa }: Props) {
       setErro('Não foi possível alterar o status. Tente novamente.')
     } finally {
       setSalvando(false)
+    }
+  }
+
+  async function handleExcluir() {
+    const confirmou = window.confirm(
+      'Tem certeza de que deseja excluir esta tarefa?',
+    )
+
+    if (!confirmou) return
+
+    setExcluindo(true)
+
+    try {
+      await excluirTarefa(tarefa.id)
+      removerTarefaNoEstado(tarefa.id)
+    } catch {
+      alert('Não foi possível excluir a tarefa.')
+    } finally {
+      setExcluindo(false)
     }
   }
 
@@ -59,6 +79,14 @@ export function TarefaCard({ tarefa }: Props) {
       <p><strong>Prioridade:</strong> {tarefaAtual.prioridade}</p>
       <p><strong>Responsável:</strong> {tarefaAtual.responsavel}</p>
       <p><strong>Prazo:</strong> {tarefaAtual.prazo}</p>
+
+      <button
+        type="button"
+        onClick={handleExcluir}
+        disabled={excluindo}
+      >
+        {excluindo ? 'Excluindo...' : 'Excluir'}
+      </button>
     </article>
   )
 }
