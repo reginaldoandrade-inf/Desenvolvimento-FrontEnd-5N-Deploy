@@ -1,0 +1,119 @@
+import { Link } from 'react-router-dom'
+import { useTarefas } from '../context/useTarefas'
+import { TarefaCard } from '../components/TarefaCard'
+import { EstadoCarregamento } from '../components/EstadoCarregamento'
+import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
+import type { Prioridade, Status, Tarefa } from '../tipos'
+import './QuadroTarefas.css'
+
+const colunas: { status: Status; titulo: string }[] = [
+  { status: 'a-fazer', titulo: 'A fazer' },
+  { status: 'em-andamento', titulo: 'Em andamento' },
+  { status: 'em-revisao', titulo: 'Em revisão' },
+  { status: 'concluida', titulo: 'Concluída' },
+]
+
+const pesoPrioridade: Record<Prioridade, number> = {
+  alta: 0,
+  media: 1,
+  baixa: 2,
+}
+
+function ordenarTarefas(a: Tarefa, b: Tarefa) {
+  const porPrioridade = pesoPrioridade[a.prioridade] - pesoPrioridade[b.prioridade]
+  if (porPrioridade !== 0) return porPrioridade
+  return a.prazo.localeCompare(b.prazo)
+}
+
+export function QuadroTarefas() {
+  const { tarefas, tarefasFiltradas, filtros, setFiltros, carregando, erro, recarregarTarefas } = useTarefas()
+
+  const filtrosAtivos = Boolean(filtros.busca.trim() || filtros.status || filtros.prioridade)
+
+  const limparFiltros = () => {
+    setFiltros({ busca: '', status: '', prioridade: '' })
+  }
+
+  if (carregando) return <EstadoCarregamento mensagem="Carregando quadro..." />
+  if (erro) {
+    return <EstadoErro mensagem={erro} onTentarNovamente={() => { void recarregarTarefas() }} />
+  }
+
+  return (
+    <section className="quadro">
+      <div className="quadro-topo">
+        <h1>Quadro de tarefas</h1>
+        <Link to="/tarefas/nova">+ Nova tarefa</Link>
+      </div>
+
+      {filtrosAtivos && (
+        <div className="quadro-aviso" role="status">
+          <span>Mostrando só as tarefas que batem com os filtros da lista.</span>
+          <button type="button" onClick={limparFiltros}>
+            Limpar filtros
+          </button>
+        </div>
+      )}
+
+      {tarefas.length === 0 ? (
+        <EstadoVazio
+          titulo="O quadro está vazio"
+          mensagem="Ainda não há tarefas cadastradas para mostrar nas colunas."
+        >
+          <Link to="/tarefas/nova">+ Criar primeira tarefa</Link>
+        </EstadoVazio>
+      ) : filtrosAtivos && tarefasFiltradas.length === 0 ? (
+        <EstadoVazio
+          icone="🔍"
+          titulo="Nenhuma tarefa encontrada"
+          mensagem="Nenhuma tarefa corresponde aos filtros da lista."
+        >
+          <button type="button" onClick={limparFiltros}>
+            Limpar filtros
+          </button>
+        </EstadoVazio>
+      ) : (
+      <div className="quadro-colunas">
+        {colunas.map((coluna) => {
+          const tarefasDaColuna = tarefasFiltradas
+            .filter((tarefa) => tarefa.status === coluna.status)
+            .sort(ordenarTarefas)
+          const idTitulo = `coluna-${coluna.status}`
+
+          return (
+            <section
+              key={coluna.status}
+              className={`quadro-coluna quadro-coluna--${coluna.status}`}
+              aria-labelledby={idTitulo}
+            >
+              <header className="quadro-coluna-cabecalho">
+                <h2 id={idTitulo}>{coluna.titulo}</h2>
+                <span
+                  className="quadro-contador"
+                  aria-label={`${tarefasDaColuna.length} tarefa(s)`}
+                >
+                  {tarefasDaColuna.length}
+                </span>
+              </header>
+
+              {tarefasDaColuna.length === 0 ? (
+                <p className="quadro-vazio">Nenhuma tarefa aqui.</p>
+              ) : (
+                <ul>
+                  {tarefasDaColuna.map((tarefa) => (
+                    <li key={tarefa.id}>
+                      <TarefaCard tarefa={tarefa} />
+                      <Link to={`/tarefas/${tarefa.id}`}>Ver detalhes</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )
+        })}
+      </div>
+      )}
+    </section>
+  )
+}
