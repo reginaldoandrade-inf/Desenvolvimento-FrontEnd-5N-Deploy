@@ -59,7 +59,7 @@ export function TarefaCard({ tarefa }: Props) {
 
   return (
     <article className="cartao-tarefa" style={{ border: '1px solid #ccc', padding: '1rem', margin: '0.5rem 0' }}>
-      <h3>{tarefaAtual.titulo}</h3>
+      <h2>{tarefaAtual.titulo}</h2>
       <p>
         <label htmlFor={`status-tarefa-${tarefaAtual.id}`}><strong>Status:</strong></label>{' '}
         <select

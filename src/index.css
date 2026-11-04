@@ -240,7 +240,7 @@ main button:disabled { opacity: .6; cursor: not-allowed; }
 .marca-texto span {
   display: block;
   margin-top: 4px;
-  color: #718096;
+  color: #475569;
   font-size: 12px;
   line-height: 1.3;
 }
