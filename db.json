@@ -31,7 +31,7 @@
       "projetoId": "1",
       "titulo": "Subir o json-server",
       "descricao": "API local a partir do db.json",
-      "status": "em-andamento",
+      "status": "em-revisao",
       "prioridade": "alta",
       "responsavel": "Bruno",
       "prazo": "2026-10-06"
@@ -55,6 +55,16 @@
       "prioridade": "media",
       "responsavel": "Diego",
       "prazo": "2026-10-14"
+    },
+    {
+      "titulo": "Marco 5 - 1",
+      "descricao": "teste",
+      "status": "a-fazer",
+      "prioridade": "baixa",
+      "responsavel": "Reginaldo",
+      "prazo": "2026-11-20",
+      "projetoId": "1",
+      "id": "Plhuxa8shaE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
