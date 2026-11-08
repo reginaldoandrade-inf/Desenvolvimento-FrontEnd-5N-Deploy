@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { FormularioTarefa } from '../components/FormularioTarefa'
-import { atualizarTarefa, buscarTarefa } from '../services/api'
+import { atualizarTarefa, buscarTarefa, ehNaoEncontrado } from '../services/api'
 import { useTarefas } from '../context/useTarefas'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
 import type { NovaTarefa } from '../tipos'
 
 export function EditarTarefa() {
@@ -13,6 +14,7 @@ export function EditarTarefa() {
   const { atualizarTarefaNoEstado } = useTarefas()
   const [valores, setValores] = useState<NovaTarefa | null>(null)
   const [erro, setErro] = useState<string | null>(null)
+  const [naoEncontrada, setNaoEncontrada] = useState(false)
   const [tentativa, setTentativa] = useState(0)
 
   useEffect(() => {
@@ -23,8 +25,10 @@ export function EditarTarefa() {
       .then(({ id: _id, ...dados }) => {
         if (ativo) setValores(dados)
       })
-      .catch(() => {
-        if (ativo) setErro('Não foi possível carregar esta tarefa.')
+      .catch((err) => {
+        if (!ativo) return
+        if (ehNaoEncontrado(err)) setNaoEncontrada(true)
+        else setErro('Não foi possível carregar esta tarefa.')
       })
 
     return () => { ativo = false }
@@ -32,6 +36,7 @@ export function EditarTarefa() {
 
   function tentarNovamente() {
     setErro(null)
+    setNaoEncontrada(false)
     setValores(null)
     setTentativa((atual) => atual + 1)
   }
@@ -41,6 +46,18 @@ export function EditarTarefa() {
     const tarefaAtualizada = await atualizarTarefa(id, dados)
     atualizarTarefaNoEstado(tarefaAtualizada)
     navegar(`/tarefas/${id}`)
+  }
+
+  if (naoEncontrada) {
+    return (
+      <EstadoVazio
+        icone="❓"
+        titulo="Tarefa não encontrada"
+        mensagem="Não é possível editar uma tarefa que não existe."
+      >
+        <Link to="/tarefas">Voltar para a lista de tarefas</Link>
+      </EstadoVazio>
+    )
   }
 
   if (erro) {

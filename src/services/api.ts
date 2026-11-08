@@ -11,11 +11,27 @@ export type NovoProjeto = Omit<Projeto, 'id'>
 export type AtualizacaoTarefa = Partial<NovaTarefa>
 export type AtualizacaoProjeto = Partial<NovoProjeto>
 
+// Distingue recurso inexistente (404) das falhas gerais de rede/API.
+export class ErroNaoEncontrado extends Error {
+  constructor() {
+    super('Registro não encontrado (404)')
+    this.name = 'ErroNaoEncontrado'
+  }
+}
+
+export function ehNaoEncontrado(erro: unknown): boolean {
+  return erro instanceof ErroNaoEncontrado
+}
+
 async function requisitar<T>(
   caminho: string,
   opcoes?: RequestInit,
 ): Promise<T> {
   const resposta = await fetch(`${API_URL}${caminho}`, opcoes)
+
+  if (resposta.status === 404) {
+    throw new ErroNaoEncontrado()
+  }
 
   if (!resposta.ok) {
     throw new Error(`Erro ao acessar a API (${resposta.status})`)

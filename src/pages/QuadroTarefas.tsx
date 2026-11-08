@@ -3,6 +3,7 @@ import { useTarefas } from '../context/useTarefas'
 import { TarefaCard } from '../components/TarefaCard'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
 import type { Prioridade, Status, Tarefa } from '../tipos'
 import './QuadroTarefas.css'
 
@@ -26,7 +27,7 @@ function ordenarTarefas(a: Tarefa, b: Tarefa) {
 }
 
 export function QuadroTarefas() {
-  const { tarefasFiltradas, filtros, setFiltros, carregando, erro, recarregarTarefas } = useTarefas()
+  const { tarefas, tarefasFiltradas, filtros, setFiltros, carregando, erro, recarregarTarefas } = useTarefas()
 
   const filtrosAtivos = Boolean(filtros.busca.trim() || filtros.status || filtros.prioridade)
 
@@ -55,6 +56,22 @@ export function QuadroTarefas() {
         </div>
       )}
 
+      {tarefas.length === 0 ? (
+        <EstadoVazio
+          titulo="O quadro está vazio"
+          mensagem="Ainda não há tarefas cadastradas para mostrar nas colunas."
+        >
+          <Link to="/tarefas/nova">+ Criar primeira tarefa</Link>
+        </EstadoVazio>
+      ) : filtrosAtivos && tarefasFiltradas.length === 0 ? (
+        <EstadoVazio
+          icone="🔍"
+          titulo="Nenhuma tarefa encontrada"
+          mensagem="Nenhuma tarefa corresponde aos filtros da lista."
+        >
+          <button type="button" onClick={limparFiltros}>Limpar filtros</button>
+        </EstadoVazio>
+      ) : (
       <div className="quadro-colunas">
         {colunas.map((coluna) => {
           const tarefasDaColuna = tarefasFiltradas
@@ -94,6 +111,7 @@ export function QuadroTarefas() {
           )
         })}
       </div>
+      )}
     </section>
   )
 }

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { listarProjetos } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
 import type { Projeto } from '../tipos'
 
 export function ListaProjetos() {
@@ -61,7 +62,13 @@ export function ListaProjetos() {
       <p><Link to="/projetos/novo">+ Novo projeto</Link></p>
 
       {projetos.length === 0 ? (
-        <p>Nenhum projeto cadastrado.</p>
+        <EstadoVazio
+          icone="📁"
+          titulo="Nenhum projeto cadastrado ainda"
+          mensagem="Crie um projeto para agrupar as tarefas de uma disciplina."
+        >
+          <Link to="/projetos/novo">+ Criar primeiro projeto</Link>
+        </EstadoVazio>
       ) : (
         <ul>
           {projetos.map((projeto) => (

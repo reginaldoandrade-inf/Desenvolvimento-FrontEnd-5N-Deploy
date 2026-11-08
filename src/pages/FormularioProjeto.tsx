@@ -5,10 +5,12 @@ import {
   atualizarProjeto,
   buscarProjeto,
   criarProjeto,
+  ehNaoEncontrado,
 } from '../services/api'
 import type { NovoProjeto } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
 
 const camposIniciais: NovoProjeto = {
   nome: '',
@@ -26,6 +28,7 @@ export function FormularioProjeto() {
   const [carregando, setCarregando] = useState(Boolean(id))
   const [salvando, setSalvando] = useState(false)
   const [erroCarregamento, setErroCarregamento] = useState<string | null>(null)
+  const [naoEncontrado, setNaoEncontrado] = useState(false)
   const [erroSalvamento, setErroSalvamento] = useState<string | null>(null)
   const [tentativa, setTentativa] = useState(0)
 
@@ -45,9 +48,10 @@ export function FormularioProjeto() {
         })
         setCarregando(false)
       })
-      .catch(() => {
+      .catch((err) => {
         if (!ativo) return
-        setErroCarregamento('Não foi possível carregar este projeto.')
+        if (ehNaoEncontrado(err)) setNaoEncontrado(true)
+        else setErroCarregamento('Não foi possível carregar este projeto.')
         setCarregando(false)
       })
 
@@ -58,6 +62,7 @@ export function FormularioProjeto() {
 
   function tentarNovamente() {
     setErroCarregamento(null)
+    setNaoEncontrado(false)
     setCarregando(true)
     setTentativa((atual) => atual + 1)
   }
@@ -99,6 +104,18 @@ export function FormularioProjeto() {
   }
 
   if (carregando) return <EstadoCarregamento mensagem="Carregando projeto para edição..." />
+
+  if (naoEncontrado) {
+    return (
+      <EstadoVazio
+        icone="❓"
+        titulo="Projeto não encontrado"
+        mensagem="Não é possível editar um projeto que não existe."
+      >
+        <Link to="/projetos">Voltar para a lista de projetos</Link>
+      </EstadoVazio>
+    )
+  }
 
   if (erroCarregamento) {
     return (
