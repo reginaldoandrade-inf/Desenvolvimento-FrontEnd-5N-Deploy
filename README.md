@@ -2,6 +2,12 @@
 
 Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizando **React + TypeScript + Vite** e **json-server**.
 
+## Aplicação publicada
+
+A aplicação **DEPLOY** está publicada no Render e pode ser acessada pelo link abaixo:
+
+**[Acessar o Gerenciador de Tarefas](https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas)**
+
 ## Equipe
 
 **DEPLOY**
@@ -59,21 +65,46 @@ Em outro terminal, execute a API:
 npx json-server db.json
 ```
 
-A aplicação ficará disponível normalmente em:
+A aplicação ficará disponível nos seguintes endereços:
+
+**Front-end local (desenvolvimento):**
 
 ```text
 http://localhost:5173
 ```
 
-E a API em:
+**Front-end publicado (Render):**
+
+```text
+https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas
+```
+
+A API ficará disponível nos seguintes endereços:
+
+**API local (desenvolvimento):**
 
 ```text
 http://localhost:3000
 ```
 
-Endpoints principais:
+**API publicada (Render):**
+
+```text
+https://desenvolvimento-frontend-5n-deploy.onrender.com
+```
+
+Endpoints principais da API:
+
+**Ambiente local:**
 
 ```text
 http://localhost:3000/tarefas
 http://localhost:3000/projetos
+```
+
+**Ambiente publicado:**
+
+```text
+https://desenvolvimento-frontend-5n-deploy.onrender.com/tarefas
+https://desenvolvimento-frontend-5n-deploy.onrender.com/projetos
 ```
