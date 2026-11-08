@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { buscarTarefa } from '../services/api'
+import { buscarTarefa, ehNaoEncontrado } from '../services/api'
 import { EstadoCarregamento } from '../components/EstadoCarregamento'
 import { EstadoErro } from '../components/EstadoErro'
+import { EstadoVazio } from '../components/EstadoVazio'
 import type { Tarefa } from '../tipos'
 
 type ResultadoBusca = {
@@ -40,7 +41,7 @@ export function DetalheTarefa() {
           setResultado({
             id,
             tarefa: null,
-            erro: 'Erro ao carregar os detalhes da tarefa.',
+            erro: ehNaoEncontrado(err) ? null : 'Erro ao carregar os detalhes da tarefa.',
           })
         }
       })
@@ -57,10 +58,9 @@ export function DetalheTarefa() {
 
   if (!id) {
     return (
-      <div>
-        <p role="alert">ID da tarefa não foi informado.</p>
+      <EstadoVazio icone="❓" titulo="Tarefa não informada">
         <Link to="/tarefas">Voltar para a lista de tarefas</Link>
-      </div>
+      </EstadoVazio>
     )
   }
 
@@ -81,10 +81,13 @@ export function DetalheTarefa() {
 
   if (!tarefa) {
     return (
-      <div>
-        <p>Tarefa não encontrada!</p>
+      <EstadoVazio
+        icone="❓"
+        titulo="Tarefa não encontrada"
+        mensagem="Ela pode ter sido excluída ou o endereço está incorreto."
+      >
         <Link to="/tarefas">Voltar para a lista de tarefas</Link>
-      </div>
+      </EstadoVazio>
     )
   }
 

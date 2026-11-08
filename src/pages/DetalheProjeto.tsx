@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { buscarProjetoComTarefas } from '../services/api';
+import { buscarProjetoComTarefas, ehNaoEncontrado } from '../services/api';
 import { TarefaCard } from '../components/TarefaCard';
 import { EstadoCarregamento } from '../components/EstadoCarregamento';
 import { EstadoErro } from '../components/EstadoErro';
+import { EstadoVazio } from '../components/EstadoVazio';
 import type { Projeto, Tarefa } from '../tipos';
 
 type ProjetoComTarefas = Projeto & { tarefas: Tarefa[] };
@@ -23,8 +24,10 @@ export function DetalheProjeto() {
       .then((resultado) => {
         if (ativo) setDados(resultado);
       })
-      .catch(() => {
-        if (ativo) setErro('Não foi possível carregar os dados do projeto.');
+      .catch((err) => {
+        if (ativo && !ehNaoEncontrado(err)) {
+          setErro('Não foi possível carregar os dados do projeto.');
+        }
       })
       .finally(() => {
         if (ativo) setCarregando(false);
@@ -49,7 +52,17 @@ export function DetalheProjeto() {
       </div>
     );
   }
-  if (!dados) return <p>Projeto não encontrado.</p>;
+  if (!dados) {
+    return (
+      <EstadoVazio
+        icone="❓"
+        titulo="Projeto não encontrado"
+        mensagem="Ele pode ter sido excluído ou o endereço está incorreto."
+      >
+        <Link to="/projetos">Voltar para a lista de projetos</Link>
+      </EstadoVazio>
+    );
+  }
 
   return (
     <div>
@@ -60,7 +73,9 @@ export function DetalheProjeto() {
 
       <h2>Tarefas deste Projeto:</h2>
       {dados.tarefas.length === 0 ? (
-        <p>Nenhuma tarefa cadastrada neste projeto.</p>
+        <EstadoVazio compacto titulo="Nenhuma tarefa neste projeto ainda">
+          <Link to={`/tarefas/nova?projetoId=${dados.id}`}>+ Adicionar tarefa</Link>
+        </EstadoVazio>
       ) : (
         dados.tarefas.map((tarefa) => (
           <div key={tarefa.id} style={{ marginBottom: '1rem' }}>

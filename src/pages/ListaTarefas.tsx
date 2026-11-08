@@ -4,10 +4,12 @@ import { useTarefas } from '../context/useTarefas';
 import { TarefaCard } from '../components/TarefaCard';
 import { EstadoCarregamento } from '../components/EstadoCarregamento';
 import { EstadoErro } from '../components/EstadoErro';
+import { EstadoVazio } from '../components/EstadoVazio';
 import type { Status, Prioridade } from '../tipos';
 
 export function ListaTarefas() {
   const {
+    tarefas,
     tarefasFiltradas,
     filtros,
     setFiltros,
@@ -115,8 +117,21 @@ export function ListaTarefas() {
       </div>
 
       {/* Lista de tarefas filtradas */}
-      {tarefasFiltradas.length === 0 ? (
-        <p>Nenhuma tarefa encontrada.</p>
+      {tarefas.length === 0 ? (
+        <EstadoVazio
+          titulo="Nenhuma tarefa cadastrada ainda"
+          mensagem="Crie a primeira tarefa para começar a organizar o trabalho."
+        >
+          <Link to="/tarefas/nova">+ Criar primeira tarefa</Link>
+        </EstadoVazio>
+      ) : tarefasFiltradas.length === 0 ? (
+        <EstadoVazio
+          icone="🔍"
+          titulo="Nenhuma tarefa encontrada"
+          mensagem="Nenhuma tarefa corresponde à busca ou aos filtros escolhidos."
+        >
+          <button type="button" onClick={limparFiltros}>Limpar filtros</button>
+        </EstadoVazio>
       ) : (
         tarefasFiltradas.map((tarefa) => (
           <div key={tarefa.id} style={{ marginBottom: '1rem' }}>
