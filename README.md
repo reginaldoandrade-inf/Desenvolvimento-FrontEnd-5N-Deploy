@@ -2,12 +2,6 @@
 
 Projeto desenvolvido para a disciplina de **Desenvolvimento Frontend**, utilizando **React + TypeScript + Vite** e **json-server**.
 
-## Aplicação publicada
-
-A aplicação **DEPLOY** está publicada no Render e pode ser acessada pelo link abaixo:
-
-**[Acessar o Gerenciador de Tarefas](https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas)**
-
 ## Equipe
 
 **DEPLOY**
@@ -65,46 +59,43 @@ Em outro terminal, execute a API:
 npx json-server db.json
 ```
 
-A aplicação ficará disponível nos seguintes endereços:
 
-**Front-end local (desenvolvimento):**
+## Endereços da aplicação
 
-```text
+### Front-end — Desenvolvimento local
+
+Após executar `npm run dev`, acesse:
+
 http://localhost:5173
-```
 
-**Front-end publicado (Render):**
+### Front-end — Produção (Render)
 
-```text
-https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas
-```
+Aplicação publicada:
 
-A API ficará disponível nos seguintes endereços:
+- Tarefas: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas
+- Quadro Kanban: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/quadro
+- Projetos: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/projetos
 
-**API local (desenvolvimento):**
+## API
 
-```text
+### API — Desenvolvimento local
+
+Após executar `npx json-server db.json`, a API ficará disponível em:
+
 http://localhost:3000
-```
 
-**API publicada (Render):**
+Endpoints principais:
 
-```text
+- Tarefas: http://localhost:3000/tarefas
+- Projetos: http://localhost:3000/projetos
+
+### API — Produção (Render)
+
+API hospedada pela equipe:
+
 https://desenvolvimento-frontend-5n-deploy.onrender.com
-```
 
-Endpoints principais da API:
+Endpoints principais:
 
-**Ambiente local:**
-
-```text
-http://localhost:3000/tarefas
-http://localhost:3000/projetos
-```
-
-**Ambiente publicado:**
-
-```text
-https://desenvolvimento-frontend-5n-deploy.onrender.com/tarefas
-https://desenvolvimento-frontend-5n-deploy.onrender.com/projetos
-```
+- Tarefas: https://desenvolvimento-frontend-5n-deploy.onrender.com/tarefas
+- Projetos: https://desenvolvimento-frontend-5n-deploy.onrender.com/projetos
