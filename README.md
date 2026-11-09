@@ -59,21 +59,43 @@ Em outro terminal, execute a API:
 npx json-server db.json
 ```
 
-A aplicação ficará disponível normalmente em:
 
-```text
+## Endereços da aplicação
+
+### Front-end — Desenvolvimento local
+
+Após executar `npm run dev`, acesse:
+
 http://localhost:5173
-```
 
-E a API em:
+### Front-end — Produção (Render)
 
-```text
+Aplicação publicada:
+
+- Tarefas: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/tarefas
+- Quadro Kanban: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/quadro
+- Projetos: https://desenvolvimento-frontend-5n-deploy-front.onrender.com/projetos
+
+## API
+
+### API — Desenvolvimento local
+
+Após executar `npx json-server db.json`, a API ficará disponível em:
+
 http://localhost:3000
-```
 
 Endpoints principais:
 
-```text
-http://localhost:3000/tarefas
-http://localhost:3000/projetos
-```
+- Tarefas: http://localhost:3000/tarefas
+- Projetos: http://localhost:3000/projetos
+
+### API — Produção (Render)
+
+API hospedada pela equipe:
+
+https://desenvolvimento-frontend-5n-deploy.onrender.com
+
+Endpoints principais:
+
+- Tarefas: https://desenvolvimento-frontend-5n-deploy.onrender.com/tarefas
+- Projetos: https://desenvolvimento-frontend-5n-deploy.onrender.com/projetos
