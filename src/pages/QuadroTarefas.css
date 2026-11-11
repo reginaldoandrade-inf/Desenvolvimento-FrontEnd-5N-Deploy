@@ -129,6 +129,45 @@
   border-radius: 10px;
 }
 
+/* Issue #46 — arrastar e soltar */
+
+.quadro-dica {
+  margin: -8px 0 16px;
+  font-size: .9rem;
+  color: #475467;
+}
+
+.quadro-coluna {
+  transition: background-color .15s ease, box-shadow .15s ease;
+}
+
+.quadro-coluna--alvo {
+  background: #e3ebf8;
+  box-shadow: inset 0 0 0 2px var(--cor-coluna);
+}
+
+.quadro-item {
+  cursor: grab;
+}
+
+.quadro-item:active {
+  cursor: grabbing;
+}
+
+.quadro-item--arrastando {
+  opacity: .45;
+}
+
+.quadro-item select,
+.quadro-item button,
+.quadro-item a {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quadro-coluna { transition: none; }
+}
+
 @media (max-width: 650px) {
   .quadro-colunas {
     grid-template-columns: 1fr;
